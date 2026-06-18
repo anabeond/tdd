@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { IconBrandTwitch, IconMenu2, IconX } from '@tabler/icons-react'
 import { NavDropdown } from '@/components/ui/NavDropdown'
@@ -58,6 +59,7 @@ export default function NavbarClient({ programs, courses }: NavbarClientProps) {
 
   // Close mobile menu on route change
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMenuOpen(false)
   }, [pathname])
 
@@ -108,7 +110,7 @@ export default function NavbarClient({ programs, courses }: NavbarClientProps) {
         transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
       >
         {/* Logo */}
-        <a href="/" className="block cursor-pointer w-[160px] md:w-[248px]" aria-label="Go to home">
+        <Link href="/" className="block cursor-pointer w-[160px] md:w-[248px]" aria-label="Go to home">
           <motion.img
             src="/images/logo-navbar.svg"
             alt="The Design Dojo"
@@ -122,7 +124,7 @@ export default function NavbarClient({ programs, courses }: NavbarClientProps) {
             }}
             transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
           />
-        </a>
+        </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
