@@ -1,26 +1,71 @@
 @import "tailwindcss";
 
+/* ── Figma Design Tokens ──────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --white: #fafafa;
+  --dark-blue: #000000;
+  --brand-color: #dd0816;
+  --accent: #dd3208;
+  --orange-100: #fb9b84;
+  --orange-200: #f97353;
+  --orange-300: #f74c22;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-dojo-white: #fafafa;
+  --color-dark-blue: #000000;
+  --color-brand: #dd0816;
+  --color-accent: #dd3208;
+  --color-orange-100: #fb9b84;
+  --color-orange-200: #f97353;
+  --color-orange-300: #f74c22;
+
+  --font-sans: var(--font-inter), sans-serif;
+
+  /* ── Layout tokens ──────────────────────────────────────── */
+  --spacing-page: 2rem; /* 32px — global horizontal page padding */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Light mode overrides ─────────────────────────────────── */
+[data-theme="light"] {
+  /* `:root` tokens used by body/scrollbar */
+  --dark-blue: #fafafa;
+  --white: #111111;
+  /* Tailwind v4 `--color-*` tokens used by utility classes */
+  --color-dark-blue: #fafafa;
+  --color-dojo-white: #111111;
+}
+
+/* ── Base ─────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--dark-blue);
+  color: var(--white);
+  font-family: var(--font-inter), sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--dark-blue);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 2px;
 }
