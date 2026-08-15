@@ -2,10 +2,13 @@
 
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
+import { Tag } from '@/components/ui/Tag'
 import DojoBreak from '@/components/DojoBreak'
 import BreakPicture from '@/components/BreakPicture'
 import AttributesSection from '@/components/AttributesSection'
 import { IconArrowRight } from '@tabler/icons-react'
+import { PRODUCT_TYPE_LABELS, getCtaLabel } from '@/lib/productType'
+import type { ProductStatus, ProductType } from '@/lib/products'
 
 export type ProgramModule = {
 	title: string
@@ -22,13 +25,15 @@ export type ProgramTemplateData = {
 	duration: string
 	level: string
 	format: string
-	price: number
-	thinkificUrl: string
+	priceDisplay: string
+	hotmartCheckoutUrl: string
 	outcomes: string[]
 	modules: ProgramModule[]
 	ctaLabel: string
 	featured?: boolean
 	highlightTags?: { icon: string; label: string }[]
+	productType: ProductType
+	status: ProductStatus
 }
 
 type ProgramTemplateProps = {
@@ -36,8 +41,6 @@ type ProgramTemplateProps = {
 }
 
 export default function ProgramTemplate({ program }: ProgramTemplateProps) {
-	const arsPrice = program.price.toLocaleString('es-AR')
-
 	return (
 		<>
 			{/* ── Main content ── */}
@@ -51,12 +54,15 @@ export default function ProgramTemplate({ program }: ProgramTemplateProps) {
 						className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-end"
 					>
 						<div className="flex flex-col gap-5">
-							<p
-								className="font-semibold text-dojo-white/75 uppercase"
-								style={{ fontSize: 13, letterSpacing: '0.08em' }}
-							>
-								/{program.badge}
-							</p>
+							<div className="flex items-center gap-3">
+								<p
+									className="font-semibold text-dojo-white/75 uppercase"
+									style={{ fontSize: 13, letterSpacing: '0.08em' }}
+								>
+									/{program.badge}
+								</p>
+								<Tag label={PRODUCT_TYPE_LABELS[program.productType]} />
+							</div>
 							<h1
 								className="font-semibold"
 								style={{ fontSize: 'clamp(40px, 6vw, 92px)', letterSpacing: '-0.03em', lineHeight: 1.02 }}
@@ -174,29 +180,33 @@ export default function ProgramTemplate({ program }: ProgramTemplateProps) {
 					<div className="w-full md:w-[480px] md:shrink-0 flex flex-col justify-between gap-8 p-8 md:p-16">
 						<div className="flex flex-col gap-2">
 							<p className="font-medium text-dojo-white/40 text-[13px] uppercase tracking-[0.1em]">Valor del Programa</p>
-							<p
-								className="font-semibold text-dojo-white"
-								style={{ fontSize: 'clamp(40px, 4vw, 72px)', letterSpacing: '-0.03em', lineHeight: 1 }}
-							>
-								$ {arsPrice}
-							</p>
-							<p className="font-light text-dojo-white/40 text-[14px]">Podés pagar en ARS.</p>
+							{program.priceDisplay && (
+								<p
+									className="font-semibold text-dojo-white"
+									style={{ fontSize: 'clamp(40px, 4vw, 72px)', letterSpacing: '-0.03em', lineHeight: 1 }}
+								>
+									{program.priceDisplay}
+								</p>
+							)}
 						</div>
 
 						<div className="flex flex-col gap-3">
-							<Button href={`/checkout/${program.slug}`} className="w-full justify-center text-[16px]">
-								{program.ctaLabel}
-							</Button>
-							<Button
-								href={program.thinkificUrl}
-								target="_blank"
-								variant="secondary"
-								className="w-full justify-center text-[16px]"
-							>
-								Comprar en USD →
-							</Button>
+							{program.status === 'available' ? (
+								<Button
+									href={program.hotmartCheckoutUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="w-full justify-center text-[16px]"
+								>
+									{getCtaLabel(program.productType, program.status)}
+								</Button>
+							) : (
+								<span className="inline-flex items-center justify-center gap-4 font-medium text-[16px] tracking-[-0.02em] text-dojo-white/30 cursor-not-allowed border border-dojo-white/15 py-3 w-full">
+									{getCtaLabel(program.productType, program.status)}
+								</span>
+							)}
 							<p className="font-light text-dojo-white/30 text-[13px] text-center">
-								Compra Protegida / Mercado Pago / Paypal
+								La compra se procesa en Hotmart.
 							</p>
 						</div>
 					</div>
@@ -246,29 +256,33 @@ export default function ProgramTemplate({ program }: ProgramTemplateProps) {
 					<div className="w-full md:w-[480px] md:shrink-0 flex flex-col justify-between gap-8 p-8 md:p-16">
 						<div className="flex flex-col gap-2">
 							<p className="font-medium text-dojo-white/40 text-[13px] uppercase tracking-[0.1em]">Valor del Programa</p>
-							<p
-								className="font-semibold text-dojo-white"
-								style={{ fontSize: 'clamp(40px, 4vw, 72px)', letterSpacing: '-0.03em', lineHeight: 1 }}
-							>
-								$ {arsPrice}
-							</p>
-							<p className="font-light text-dojo-white/40 text-[14px]">Podés pagar en ARS.</p>
+							{program.priceDisplay && (
+								<p
+									className="font-semibold text-dojo-white"
+									style={{ fontSize: 'clamp(40px, 4vw, 72px)', letterSpacing: '-0.03em', lineHeight: 1 }}
+								>
+									{program.priceDisplay}
+								</p>
+							)}
 						</div>
 
 						<div className="flex flex-col gap-3">
-							<Button href={`/checkout/${program.slug}`} className="w-full justify-center text-[16px]">
-								{program.ctaLabel}
-							</Button>
-							<Button
-								href={program.thinkificUrl}
-								target="_blank"
-								variant="secondary"
-								className="w-full justify-center text-[16px]"
-							>
-								Comprar en USD →
-							</Button>
+							{program.status === 'available' ? (
+								<Button
+									href={program.hotmartCheckoutUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="w-full justify-center text-[16px]"
+								>
+									{getCtaLabel(program.productType, program.status)}
+								</Button>
+							) : (
+								<span className="inline-flex items-center justify-center gap-4 font-medium text-[16px] tracking-[-0.02em] text-dojo-white/30 cursor-not-allowed border border-dojo-white/15 py-3 w-full">
+									{getCtaLabel(program.productType, program.status)}
+								</span>
+							)}
 							<p className="font-light text-dojo-white/30 text-[13px] text-center">
-								Compra Protegida / Mercado Pago / Paypal
+								La compra se procesa en Hotmart.
 							</p>
 						</div>
 					</div>

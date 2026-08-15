@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/checkout/', '/api/'],
+        disallow: ['/api/'],
       },
     ],
     sitemap: 'https://thedesigndojo.com/sitemap.xml',

@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
+import SubscribeSection from '@/components/SubscribeSection'
 import Footer from '@/components/Footer'
 import ProgramTemplate from '@/components/Program-Template'
 import ComingSoonTemplate from '@/components/ComingSoonTemplate'
@@ -55,10 +56,9 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
       provider: { '@type': 'Organization', name: 'The Design Dojo', sameAs: BASE_URL },
       offers: {
         '@type': 'Offer',
-        price: program.price,
-        priceCurrency: 'USD',
-        availability: 'https://schema.org/InStock',
-        url: `${BASE_URL}/checkout/${slug}`,
+        availability:
+          program.status === 'available' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+        url: program.hotmartCheckoutUrl || `${BASE_URL}/programs/${slug}`,
       },
       hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'online', courseWorkload: program.duration },
     }
@@ -67,6 +67,7 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <Navbar />
         <ProgramTemplate program={program} />
+        <SubscribeSection />
         <Footer />
       </main>
     )
@@ -78,6 +79,7 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
       <main className="bg-dark-blue min-h-screen">
         <Navbar />
         <ComingSoonTemplate product={comingSoon} />
+        <SubscribeSection />
         <Footer />
       </main>
     )

@@ -15,9 +15,9 @@ import Footer from '@/components/Footer'
 import SubscribeSection from '@/components/SubscribeSection'
 import { Button } from '@/components/ui/Button'
 import { Tag } from '@/components/ui/Tag'
+import { ProductImage } from '@/components/ui/ProductImage'
 import { getCourses } from '@/lib/products'
 import { IconArrowRight, IconVideo, IconClockHour4, IconBolt, IconCertificate } from '@tabler/icons-react'
-import Image from 'next/image'
 
 const INCLUDES = [
   { icon: IconVideo, label: 'Clases en video' },
@@ -154,17 +154,13 @@ export default async function CoursesPage() {
                 className="relative w-full overflow-hidden bg-dojo-white/5"
                 style={{ aspectRatio: '16/10' }}
               >
-                {course.heroImage ? (
-                  <Image
-                    src={course.heroImage}
-                    alt={course.title}
-                    fill
-                    className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.04]"
-                    sizes="(max-width: 1856px) 33vw"
-                  />
-                ) : (
-                  PLACEHOLDER
-                )}
+                <ProductImage
+                  src={course.heroImage}
+                  alt={course.title}
+                  className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.04]"
+                  sizes="(max-width: 1856px) 33vw"
+                  placeholder={PLACEHOLDER}
+                />
               </div>
 
               {/* Content */}
@@ -193,7 +189,7 @@ export default async function CoursesPage() {
                   </div>
                   <div className="h-px bg-dojo-white/10" />
                   <Button
-                    href={`/courses/${course.slug}`}
+                    type="button"
                     variant="underline"
                     className="text-[15px] text-dojo-white border-accent border-b-2 hover:text-accent self-start"
                   >

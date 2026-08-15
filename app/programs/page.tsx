@@ -15,9 +15,9 @@ import Footer from '@/components/Footer'
 import SubscribeSection from '@/components/SubscribeSection'
 import { Button } from '@/components/ui/Button'
 import { Tag } from '@/components/ui/Tag'
+import { ProductImage } from '@/components/ui/ProductImage'
 import { getPrograms } from '@/lib/products'
 import { IconArrowRight, IconUsers, IconVideo, IconCalendarEvent, IconBrandFigma, IconAward } from '@tabler/icons-react'
-import Image from 'next/image'
 import CTABreak from '@/components/CTABreak'
 
 export default async function ProgramsPage() {
@@ -164,28 +164,26 @@ export default async function ProgramsPage() {
             >
               {/* Image */}
               <div className="relative w-full overflow-hidden bg-dojo-white/5" style={{ aspectRatio: '16/10' }}>
-                {program.heroImage ? (
-                  <Image
-                    src={program.heroImage}
-                    alt={program.title}
-                    fill
-                    className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.04]"
-                    sizes="(max-width: 1856px) 33vw"
-                  />
-                ) : (
-                  <>
-                    <div
-                      className="absolute inset-0 opacity-10"
-                      style={{
-                        backgroundImage: 'linear-gradient(rgba(255,255,255,.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.15) 1px, transparent 1px)',
-                        backgroundSize: '48px 48px',
-                      }}
-                    />
-                    <div className="absolute inset-0 flex items-end p-5">
-                      <p className="text-dojo-white/20 text-[12px] uppercase tracking-[0.1em]">imagen próximamente</p>
-                    </div>
-                  </>
-                )}
+                <ProductImage
+                  src={program.heroImage}
+                  alt={program.title}
+                  className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.04]"
+                  sizes="(max-width: 1856px) 33vw"
+                  placeholder={
+                    <>
+                      <div
+                        className="absolute inset-0 opacity-10"
+                        style={{
+                          backgroundImage: 'linear-gradient(rgba(255,255,255,.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.15) 1px, transparent 1px)',
+                          backgroundSize: '48px 48px',
+                        }}
+                      />
+                      <div className="absolute inset-0 flex items-end p-5">
+                        <p className="text-dojo-white/20 text-[12px] uppercase tracking-[0.1em]">imagen próximamente</p>
+                      </div>
+                    </>
+                  }
+                />
               </div>
 
               {/* Content */}
@@ -215,7 +213,7 @@ export default async function ProgramsPage() {
                   </div>
                   <div className="h-px bg-dojo-white/10" />
                   <Button
-                    href={`/programs/${program.slug}`}
+                    type="button"
                     variant="underline"
                     className="text-[15px] text-dojo-white border-accent border-b-2 hover:text-accent self-start"
                   >

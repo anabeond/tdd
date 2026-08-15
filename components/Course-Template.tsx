@@ -2,6 +2,9 @@
 
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
+import { Tag } from '@/components/ui/Tag'
+import { PRODUCT_TYPE_LABELS, getCtaLabel } from '@/lib/productType'
+import type { ProductStatus, ProductType } from '@/lib/products'
 
 export type CourseModule = {
 	title: string
@@ -18,11 +21,13 @@ export type CourseTemplateData = {
 	duration: string
 	level: string
 	format: string
-	price: number
-	thinkificUrl: string
+	priceDisplay: string
+	hotmartCheckoutUrl: string
 	outcomes: string[]
 	modules: CourseModule[]
 	ctaLabel: string
+	productType: ProductType
+	status: ProductStatus
 }
 
 type CourseTemplateProps = {
@@ -41,12 +46,15 @@ export default function CourseTemplate({ course }: CourseTemplateProps) {
 					className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-end"
 				>
 					<div className="flex flex-col gap-5">
-						<p
-							className="font-semibold text-dojo-white/75 uppercase"
-							style={{ fontSize: 13, letterSpacing: '0.08em' }}
-						>
-							/{course.badge}
-						</p>
+						<div className="flex items-center gap-3">
+							<p
+								className="font-semibold text-dojo-white/75 uppercase"
+								style={{ fontSize: 13, letterSpacing: '0.08em' }}
+							>
+								/{course.badge}
+							</p>
+							<Tag label={PRODUCT_TYPE_LABELS[course.productType]} />
+						</div>
 						<h1
 							className="font-semibold"
 							style={{ fontSize: 'clamp(40px, 6vw, 92px)', letterSpacing: '-0.03em', lineHeight: 1.02 }}
@@ -106,10 +114,24 @@ export default function CourseTemplate({ course }: CourseTemplateProps) {
 								</li>
 							))}
 						</ul>
-						<div className="pt-2">
-							<Button href={`/checkout/${course.slug}`} className="text-[16px]">
-								{course.ctaLabel}
-							</Button>
+						<div className="flex items-center gap-4 pt-2">
+							{course.priceDisplay && (
+								<span className="text-dojo-white/70 text-[18px] font-medium">{course.priceDisplay}</span>
+							)}
+							{course.status === 'available' ? (
+								<Button
+									href={course.hotmartCheckoutUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-[16px]"
+								>
+									{getCtaLabel(course.productType, course.status)}
+								</Button>
+							) : (
+								<span className="inline-flex items-center gap-4 font-medium text-[24px] tracking-[-0.02em] text-dojo-white/30 cursor-not-allowed">
+									{getCtaLabel(course.productType, course.status)}
+								</span>
+							)}
 						</div>
 					</div>
 

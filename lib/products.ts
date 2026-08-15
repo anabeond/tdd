@@ -2,6 +2,10 @@ import { supabaseServer } from '@/lib/supabase-server'
 import type { ProgramTemplateData } from '@/components/Program-Template'
 import type { CourseTemplateData } from '@/components/Course-Template'
 
+export type ProductType = 'online_course' | 'ebook' | 'mentorship'
+export type ProductStatus = 'available' | 'coming_soon' | 'sold_out'
+export type ProductSeason = 'fall' | 'winter' | 'spring' | 'summer'
+
 type ProductRow = {
   id: number
   slug: string
@@ -12,8 +16,8 @@ type ProductRow = {
   duration: string | null
   level: string | null
   format: string | null
-  price: string // numeric comes as string from supabase-js
-  thinkific_url: string | null
+  price_display: string | null
+  hotmart_checkout_url: string | null
   outcomes: string[]
   modules: { title: string; description: string }[]
   cta_text: string | null
@@ -21,7 +25,9 @@ type ProductRow = {
   featured: boolean
   highlight_tags: { icon: string; label: string }[]
   active: boolean
-  coming_soon: boolean
+  product_type: ProductType
+  season: ProductSeason | null
+  status: ProductStatus
 }
 
 function toProgram(row: ProductRow): ProgramTemplateData {
@@ -35,13 +41,15 @@ function toProgram(row: ProductRow): ProgramTemplateData {
     duration: row.duration ?? '',
     level: row.level ?? '',
     format: row.format ?? '',
-    price: Number(row.price),
-    thinkificUrl: row.thinkific_url ?? '',
+    priceDisplay: row.price_display ?? '',
+    hotmartCheckoutUrl: row.hotmart_checkout_url ?? '',
     outcomes: row.outcomes ?? [],
     modules: row.modules ?? [],
     ctaLabel: row.cta_text ?? 'Ver programa',
     featured: row.featured,
     highlightTags: row.highlight_tags ?? [],
+    productType: row.product_type,
+    status: row.status,
   }
 }
 
@@ -56,11 +64,13 @@ function toCourse(row: ProductRow): CourseTemplateData {
     duration: row.duration ?? '',
     level: row.level ?? '',
     format: row.format ?? '',
-    price: Number(row.price),
-    thinkificUrl: row.thinkific_url ?? '',
+    priceDisplay: row.price_display ?? '',
+    hotmartCheckoutUrl: row.hotmart_checkout_url ?? '',
     outcomes: row.outcomes ?? [],
     modules: row.modules ?? [],
     ctaLabel: row.cta_text ?? 'Empezar el curso',
+    productType: row.product_type,
+    status: row.status,
   }
 }
 
@@ -70,6 +80,8 @@ export async function getPrograms(): Promise<ProgramTemplateData[]> {
     .select('*')
     .eq('category', 'programa')
     .eq('active', true)
+    .neq('status', 'coming_soon')
+    .order('sort_order', { ascending: true, nullsFirst: false })
     .order('id')
   return (data as ProductRow[] ?? []).map(toProgram)
 }
@@ -80,6 +92,8 @@ export async function getCourses(): Promise<CourseTemplateData[]> {
     .select('*')
     .eq('category', 'curso')
     .eq('active', true)
+    .neq('status', 'coming_soon')
+    .order('sort_order', { ascending: true, nullsFirst: false })
     .order('id')
   return (data as ProductRow[] ?? []).map(toCourse)
 }
@@ -91,7 +105,7 @@ export async function getProgramBySlug(slug: string): Promise<ProgramTemplateDat
     .eq('slug', slug)
     .eq('category', 'programa')
     .eq('active', true)
-    .eq('coming_soon', false)
+    .neq('status', 'coming_soon')
     .single()
   return data ? toProgram(data as ProductRow) : null
 }
@@ -103,57 +117,51 @@ export async function getCourseBySlug(slug: string): Promise<CourseTemplateData 
     .eq('slug', slug)
     .eq('category', 'curso')
     .eq('active', true)
-    .eq('coming_soon', false)
+    .neq('status', 'coming_soon')
     .single()
   return data ? toCourse(data as ProductRow) : null
-}
-
-export async function getProductBySlug(slug: string) {
-  const { data } = await supabaseServer
-    .from('products')
-    .select('*')
-    .eq('slug', slug)
-    .eq('active', true)
-    .single()
-  if (!data) return null
-  const row = data as ProductRow
-  return {
-    slug: row.slug,
-    title: row.title,
-    price: Number(row.price),
-    thinkificUrl: row.thinkific_url ?? '',
-  }
 }
 
 export type ProductCard = {
   id: number
   slug: string
   category: string
+  productType: ProductType
+  status: ProductStatus
   image: string
   title: string
   subtitle: string
   badge: string | null
   meta: string | null
   href: string
+  hotmartCheckoutUrl: string
+  priceDisplay: string
 }
 
 export async function getProductCards(): Promise<ProductCard[]> {
   const { data } = await supabaseServer
     .from('products')
-    .select('id, slug, title, subtitle, thumbnail, featured_image, launch_label, duration, category')
+    .select(
+      'id, slug, title, subtitle, thumbnail, featured_image, launch_label, duration, category, product_type, status, hotmart_checkout_url, price_display'
+    )
     .eq('active', true)
+    .order('sort_order', { ascending: true, nullsFirst: false })
     .order('id')
   if (!data) return []
   return data.map((row) => ({
     id: row.id,
     slug: row.slug,
     category: row.category ?? '',
+    productType: row.product_type,
+    status: row.status,
     image: row.thumbnail ?? row.featured_image ?? '',
     title: row.title,
     subtitle: row.subtitle ?? '',
     badge: row.launch_label ?? null,
     meta: row.duration ?? null,
     href: row.category === 'curso' ? `/courses/${row.slug}` : `/programs/${row.slug}`,
+    hotmartCheckoutUrl: row.hotmart_checkout_url ?? '',
+    priceDisplay: row.price_display ?? '',
   }))
 }
 
@@ -162,6 +170,7 @@ export async function getProductsForNav() {
     .from('products')
     .select('slug, title, category')
     .eq('active', true)
+    .order('sort_order', { ascending: true, nullsFirst: false })
     .order('id')
   return (data ?? []) as { slug: string; title: string; category: string }[]
 }
@@ -179,7 +188,7 @@ export async function getComingSoonBySlug(slug: string): Promise<ComingSoonData 
     .from('products')
     .select('slug, title, subtitle, long_description, category')
     .eq('slug', slug)
-    .eq('coming_soon', true)
+    .eq('status', 'coming_soon')
     .single()
   if (!data) return null
   const row = data as Pick<ProductRow, 'slug' | 'title' | 'subtitle' | 'long_description' | 'category'>
@@ -207,6 +216,7 @@ export async function getFeaturedProduct(): Promise<ProgramTemplateData | null> 
     .from('products')
     .select('*')
     .eq('active', true)
+    .order('sort_order', { ascending: true, nullsFirst: false })
     .order('id')
     .limit(1)
     .single()

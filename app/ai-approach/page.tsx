@@ -8,6 +8,7 @@ export const metadata: Metadata = {
 
 import Navbar from '@/components/Navbar'
 import AIApproach from '@/components/AIApproach'
+import SubscribeSection from '@/components/SubscribeSection'
 import Footer from '@/components/Footer'
 
 export default function AIApproachPage() {
@@ -15,6 +16,7 @@ export default function AIApproachPage() {
     <main className="bg-dark-blue min-h-screen">
       <Navbar />
       <AIApproach />
+      <SubscribeSection />
       <Footer />
     </main>
   )
