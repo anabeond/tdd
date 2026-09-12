@@ -7,6 +7,7 @@ import CourseTemplate from '@/components/Course-Template'
 import ComingSoonTemplate from '@/components/ComingSoonTemplate'
 import { getCourseBySlug, getComingSoonBySlug } from '@/lib/products'
 import { SITE_URL as BASE_URL } from '@/lib/site-config'
+import { buildProductFaq, faqJsonLd } from '@/lib/seo'
 
 type CoursePageProps = {
   params: Promise<{ slug: string }>
@@ -66,9 +67,13 @@ export default async function CoursePage({ params }: CoursePageProps) {
       },
       hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'online', courseWorkload: course.duration },
     }
+    const faqLd = faqJsonLd(
+      buildProductFaq(course, course.priceUsd ? { amount: course.priceUsd, currency: 'USD' } : null)
+    )
     return (
       <main className="bg-dark-blue min-h-screen">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
         <Navbar />
         <CourseTemplate course={course} />
         <SubscribeSection />
