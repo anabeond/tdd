@@ -57,6 +57,11 @@ const organizationJsonLd = {
   url: SITE_URL,
   logo: `${SITE_URL}/images/logo-navbar.svg`,
   sameAs: [SOCIAL_LINKS.instagram, SOCIAL_LINKS.twitch, SOCIAL_LINKS.figma],
+  founder: {
+    '@type': 'Person',
+    name: 'Ana B. Wilhelm',
+    sameAs: [SOCIAL_LINKS.instagram, SOCIAL_LINKS.twitch, SOCIAL_LINKS.figma],
+  },
 }
 
 const websiteJsonLd = {

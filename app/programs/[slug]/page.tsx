@@ -7,7 +7,7 @@ import ProgramTemplate from '@/components/Program-Template'
 import ComingSoonTemplate from '@/components/ComingSoonTemplate'
 import { getProgramBySlug, getComingSoonBySlug } from '@/lib/products'
 import { SITE_URL as BASE_URL } from '@/lib/site-config'
-import { buildProductFaq, faqJsonLd } from '@/lib/seo'
+import { buildProductFaq, faqJsonLd, breadcrumbJsonLd } from '@/lib/seo'
 
 type ProgramPageProps = {
   params: Promise<{ slug: string }>
@@ -70,10 +70,16 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
     const faqLd = faqJsonLd(
       buildProductFaq(program, program.priceArs ? { amount: program.priceArs, currency: 'ARS' } : null)
     )
+    const breadcrumbLd = breadcrumbJsonLd([
+      { name: 'Inicio', url: BASE_URL },
+      { name: 'Programas', url: `${BASE_URL}/programs` },
+      { name: program.title },
+    ])
     return (
       <main className="bg-dark-blue min-h-screen">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
         <Navbar />
         <ProgramTemplate program={program} />
         <SubscribeSection />

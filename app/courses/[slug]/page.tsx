@@ -7,7 +7,7 @@ import CourseTemplate from '@/components/Course-Template'
 import ComingSoonTemplate from '@/components/ComingSoonTemplate'
 import { getCourseBySlug, getComingSoonBySlug } from '@/lib/products'
 import { SITE_URL as BASE_URL } from '@/lib/site-config'
-import { buildProductFaq, faqJsonLd } from '@/lib/seo'
+import { buildProductFaq, faqJsonLd, breadcrumbJsonLd } from '@/lib/seo'
 
 type CoursePageProps = {
   params: Promise<{ slug: string }>
@@ -70,10 +70,16 @@ export default async function CoursePage({ params }: CoursePageProps) {
     const faqLd = faqJsonLd(
       buildProductFaq(course, course.priceUsd ? { amount: course.priceUsd, currency: 'USD' } : null)
     )
+    const breadcrumbLd = breadcrumbJsonLd([
+      { name: 'Inicio', url: BASE_URL },
+      { name: 'Cursos', url: `${BASE_URL}/courses` },
+      { name: course.title },
+    ])
     return (
       <main className="bg-dark-blue min-h-screen">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
         <Navbar />
         <CourseTemplate course={course} />
         <SubscribeSection />
