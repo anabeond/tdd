@@ -12,6 +12,6 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // Gate every page; leave API routes and static assets (incl. the logo) reachable.
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|images|icons).*)'],
+  // Gate every page; leave API routes, crawler/agent metadata files, and static assets (incl. the logo) reachable.
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|images|icons|robots.txt|sitemap.xml|llms.txt).*)'],
 }
