@@ -1,0 +1,21 @@
+# The Design Dojo
+
+> Escuela de diseño UX/UI en español para diseñadores latinoamericanos, fundada por Ana B. Wilhelm. Aprendizaje en vivo con proceso real de diseño, no solo teoría — canal insignia en Twitch todos los lunes a las 19:00 hs (ART).
+
+> Nota: el sitio público todavía muestra una pantalla "coming soon" — el catálogo de abajo es el contenido real, en preparación para el lanzamiento.
+
+## Sobre
+
+- [Quiénes somos](https://eldesigndojo.com/the-dojo): fundadora, comunidad y enfoque pedagógico del dojo.
+- [Enfoque con IA](https://eldesigndojo.com/ai-approach): cómo se integra la IA en el proceso de diseño sin reemplazar el criterio del diseñador.
+
+## Programas y cursos
+
+- [Fundamentos Escenciales del Diseño UX/UI](https://eldesigndojo.com/programs/fundamentals-ux-ui): Acompañamiento Grupal — disponible
+- [Figma All Access](https://eldesigndojo.com/courses/figma-all-access): Auto Layouts, Componentes y Variables — próximamente
+
+## Comunidad
+
+- [Twitch](https://www.twitch.tv/thedesigndojo): streams de diseño UX/UI en vivo, lunes 19:00 hs (ART).
+- [Instagram](https://www.instagram.com/the.design.dojo)
+- [Figma Community](https://www.figma.com/@thedesigndojo)
