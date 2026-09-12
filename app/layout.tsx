@@ -76,6 +76,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const comingSoon = process.env.COMING_SOON === 'true'
+
   return (
     <html lang="es" className={newBlack.variable}>
       <body className="antialiased">
@@ -83,9 +85,9 @@ export default function RootLayout({
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
         <ThemeProvider>
           <CookieConsentProvider>
-            <AnnouncementBar />
-            <CookieConsentBanner />
-            <AnalyticsGate />
+            {!comingSoon && <AnnouncementBar />}
+            {!comingSoon && <CookieConsentBanner />}
+            {!comingSoon && <AnalyticsGate />}
             <div style={{ overflowX: 'hidden', position: 'relative' }}>
               {children}
             </div>
