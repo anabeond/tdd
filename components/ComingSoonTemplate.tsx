@@ -63,12 +63,14 @@ export default function ComingSoonTemplate({ product }: { product: ComingSoonDat
             >
               {product.title}
             </h1>
-            <p
-              className="font-light text-dojo-white/70"
-              style={{ fontSize: 'clamp(20px, 1.8vw, 28px)', letterSpacing: '-0.02em', lineHeight: 1.25 }}
-            >
-              {product.subtitle}
-            </p>
+            {product.subtitle && (
+              <p
+                className="font-light text-dojo-white/70"
+                style={{ fontSize: 'clamp(20px, 1.8vw, 28px)', letterSpacing: '-0.02em', lineHeight: 1.25 }}
+              >
+                {product.subtitle}
+              </p>
+            )}
           </div>
 
           {product.description && (
@@ -181,6 +183,32 @@ export default function ComingSoonTemplate({ product }: { product: ComingSoonDat
           )}
         </div>
       </motion.div>
+
+      {product.thumbnail && (
+        <motion.div
+          className="relative w-full overflow-hidden md:hidden"
+          style={{ aspectRatio: '1320 / 1832', marginTop: '4em' }}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <img src={product.thumbnail} alt={product.title} className="w-full h-full object-contain" />
+        </motion.div>
+      )}
+
+      {product.featuredImage && (
+        <motion.div
+          className={`relative w-full overflow-hidden ${product.thumbnail ? 'hidden md:block' : 'block'}`}
+          style={{ aspectRatio: '1920 / 768', marginTop: '4em' }}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <img src={product.featuredImage} alt={product.title} className="w-full h-full object-contain" />
+        </motion.div>
+      )}
     </section>
   )
 }

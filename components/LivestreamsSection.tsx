@@ -77,15 +77,20 @@ export default function LivestreamsSection() {
     <section className="w-full flex flex-col gap-16 md:gap-32 lg:gap-48">
       {/* Header block */}
       <div className="flex flex-col gap-16 items-center">
-        {/* Thin band image — decorative */}
-        <div className="w-full h-16 overflow-hidden relative">
+        {/* Band image — decorative; full vertical poster on mobile, thin band on desktop */}
+        <div className="w-full overflow-hidden relative aspect-[1320/1832] md:aspect-auto md:h-16">
           <Image
-            src="/images/akira-band.jpg"
+            src="/images/design-dojo-banner-doitfordesign01.png"
             alt=""
             fill
-            className="object-cover object-center opacity-80"
+            className="object-contain opacity-80 md:hidden"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-dark-blue via-transparent to-dark-blue" />
+          <Image
+            src="/images/dojo-bio.png"
+            alt=""
+            fill
+            className="hidden md:block object-cover object-center opacity-80"
+          />
         </div>
 
         {/* Headline */}
@@ -105,7 +110,7 @@ export default function LivestreamsSection() {
               letterSpacing: '-0.02em',
             }}
           >
-            <span className="block font-light uppercase tracking-widest" style={{ fontSize: 16, letterSpacing: '0.12em' }}>#MondayUXNight</span>
+            <span className="block font-light uppercase tracking-widest text-accent mb-4" style={{ fontSize: 16, letterSpacing: '0.12em' }}>#MondayUXNight</span>
             Todos los Lunes diseñamos en vivo con vos.{' '}
             <span className="font-light inline-flex items-center gap-2 whitespace-nowrap"><IconArrowRight className="inline-block shrink-0" style={{ width: '0.9em', height: '0.9em' }} strokeWidth={1.5} />Siempre por{' '}<a href="https://www.twitch.tv/thedesigndojo" target="_blank" rel="noopener noreferrer" className="transition-colors duration-200 hover:text-accent">Twitch.</a></span>
           </h2>
@@ -180,8 +185,8 @@ export default function LivestreamsSection() {
         </motion.div>
       </div>
 
-      {/* Video cards + label */}
-      <div className="flex flex-col gap-8">
+      {/* Video cards + label — hidden until this stage is activated, kept in place for later */}
+      <div className="hidden flex-col gap-8" aria-hidden="true">
         <p
           className="px-4 md:px-page font-medium text-dojo-white/50"
           style={{ fontSize: 16, letterSpacing: '-0.02em' }}

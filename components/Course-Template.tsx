@@ -18,12 +18,16 @@ export type CourseTemplateData = {
 	subtitle: string
 	overview: string
 	heroImage: string
+	heroImageMobile: string
 	duration: string
 	level: string
 	format: string
-	priceDisplay: string
+	priceUsd: string
+	priceArs: string
 	hotmartCheckoutUrl: string
 	outcomes: string[]
+	targetAudience: string[]
+	notFor: string[]
 	modules: CourseModule[]
 	ctaLabel: string
 	productType: ProductType
@@ -105,18 +109,53 @@ export default function CourseTemplate({ course }: CourseTemplateProps) {
 					className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12"
 				>
 					<div className="flex flex-col gap-5">
+						<img src="/images/STICKER.png" alt="" width={150} height={150} />
 						<h2 className="font-semibold text-[34px] tracking-[-0.02em]">Overview</h2>
 						<p className="text-dojo-white/85 text-[18px] leading-[1.55]">{course.overview}</p>
 						<ul className="flex flex-col gap-2">
 							{course.outcomes.map((outcome) => (
 								<li key={outcome} className="text-dojo-white text-[16px] leading-[1.45]">
-									{'-> '} {outcome}
+									{'• '} {outcome}
 								</li>
 							))}
 						</ul>
+
+						{course.targetAudience.length > 0 && (
+							<div className="flex flex-col gap-3 mt-10">
+								<h2 className="font-semibold text-[24px] tracking-[-0.02em]">A quién va dirigido</h2>
+								<ul className="flex flex-col gap-2">
+									{course.targetAudience.map((item) => (
+										<li key={item} className="text-dojo-white text-[16px] leading-[1.45]">
+											{'• '} {item}
+										</li>
+									))}
+								</ul>
+							</div>
+						)}
+
+						{course.notFor.length > 0 && (
+							<div className="flex flex-col gap-3 mt-10">
+								<h2 className="font-semibold text-[24px] tracking-[-0.02em]">Para quién no es</h2>
+								<ul className="flex flex-col gap-2">
+									{course.notFor.map((item) => (
+										<li key={item} className="text-dojo-white/60 text-[16px] leading-[1.45]">
+											{'• '} {item}
+										</li>
+									))}
+								</ul>
+							</div>
+						)}
+
 						<div className="flex items-center gap-4 pt-2">
-							{course.priceDisplay && (
-								<span className="text-dojo-white/70 text-[18px] font-medium">{course.priceDisplay}</span>
+							{course.priceUsd && (
+								<div className="flex flex-col gap-1 text-[18px] font-medium">
+									<span className="text-dojo-white/70">{course.priceUsd}</span>
+									{course.priceArs && (
+										<span className="text-dojo-white/40" style={{ fontSize: '0.6em' }}>
+											{course.priceArs}
+										</span>
+									)}
+								</div>
 							)}
 							{course.status === 'available' ? (
 								<Button
@@ -136,14 +175,14 @@ export default function CourseTemplate({ course }: CourseTemplateProps) {
 					</div>
 
 					<div className="flex flex-col gap-4">
-						<h2 className="font-semibold text-[34px] tracking-[-0.02em]">Modulos</h2>
+						<h2 className="font-semibold text-[34px] tracking-[-0.02em]">Módulos</h2>
 						<div className="flex flex-col border border-dojo-white/20">
 							{course.modules.map((module, index) => (
 								<div
 									key={module.title}
 									className="p-5 border-b border-dojo-white/15 last:border-b-0"
 								>
-									<p className="text-dojo-white/60 text-[12px] uppercase tracking-[1.4px]">Modulo {index + 1}</p>
+									<p className="text-dojo-white/60 text-[12px] uppercase tracking-[1.4px]">Módulo {index + 1}</p>
 									<h3 className="font-semibold text-[22px] tracking-[-0.02em] mt-1">{module.title}</h3>
 									<p className="text-dojo-white/82 text-[15px] leading-[1.5] mt-2">{module.description}</p>
 								</div>

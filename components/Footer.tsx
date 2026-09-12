@@ -1,13 +1,20 @@
+'use client'
+
+import { useTheme } from '@/components/ThemeProvider'
+
 export default function Footer() {
+  const { theme } = useTheme()
+
   return (
-    <footer className="w-full bg-accent">
-      <div className="flex flex-col gap-4 px-4 md:px-page py-8 text-dojo-white">
+    <footer className="w-full bg-dojo-white">
+      <div className="flex flex-col gap-4 px-4 md:px-page py-8 text-dark-blue">
         {/* Logo 96×96 */}
         <div className="size-24 shrink-0">
           <img
             src="/images/logo-footer.svg"
             alt="The Design Dojo"
             className="w-full h-full object-contain object-left"
+            style={{ filter: theme === 'dark' ? 'brightness(0) saturate(100%)' : 'none' }}
           />
         </div>
 
@@ -24,8 +31,8 @@ export default function Footer() {
           {/* Bottom row */}
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between w-full">
             <p className="font-light text-[10px] tracking-[0.48px]">
-              Todos los derechos reservados — The Design Dojo 2026 —{' '}
-              <span className="font-semibold">Hecho en Argentina.</span>
+              Todos los derechos reservados. The Design Dojo 2026.{' '}
+              <span className="font-semibold">Argentina.</span>
             </p>
             <p className="font-medium text-[10px] sm:text-right sm:shrink-0 sm:pl-8">
               Do it for Design.

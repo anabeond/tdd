@@ -2,7 +2,6 @@
 
 import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-// import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
 export default function Hero() {
   const ref = useRef<HTMLDivElement>(null)
@@ -61,7 +60,6 @@ export default function Hero() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
       >
-        {/* <ThemeToggle /> */}
         <motion.h1
           className="font-medium whitespace-nowrap select-none text-dojo-white"
           style={{

@@ -12,8 +12,8 @@ export function Tab({ label, active, onClick, className }: TabProps) {
     <button
       onClick={onClick}
       className={cn(
-        'h-10 !px-4 !py-2 rounded-full font-bold text-[16px] transition-all duration-300 whitespace-nowrap cursor-pointer',
-        active ? 'bg-brand text-dojo-white' : 'bg-gray-800 text-dojo-white hover:bg-gray-700',
+        'h-10 !px-4 !py-2 rounded-none font-bold text-[16px] transition-all duration-300 whitespace-nowrap cursor-pointer',
+        active ? 'bg-brand text-[#fafafa]' : 'bg-gray-800 text-[#fafafa] hover:bg-gray-700',
         className
       )}
     >

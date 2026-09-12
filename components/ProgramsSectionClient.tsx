@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { ProductImage } from '@/components/ui/ProductImage'
 import { IconArrowRight } from '@tabler/icons-react'
 import type { ProductCard } from '@/lib/products'
-import { PRODUCT_TYPE_LABELS, getCtaLabel } from '@/lib/productType'
+import { getCtaLabel } from '@/lib/productType'
 
 const containerVariants: Variants = {
   hidden: {},
@@ -28,7 +28,9 @@ const TABS = ['Todo el Contenido', 'Programas', 'Cursos']
 
 function ProductCard({ card }: { card: ProductCard }) {
   const available = card.status === 'available'
+  const soldOut = card.status === 'sold_out'
   const ctaLabel = getCtaLabel(card.productType, card.status)
+  const viewLabel = card.category === 'sprint' ? 'Ver Curso' : 'Ver Programa'
 
   return (
     <motion.div className="flex flex-col gap-8 w-full shrink-0 w-[85vw] sm:w-[420px]" variants={cardVariants}>
@@ -77,7 +79,6 @@ function ProductCard({ card }: { card: ProductCard }) {
           </p>
         </a>
         <div className="flex gap-2 items-center flex-wrap">
-          <Tag label={PRODUCT_TYPE_LABELS[card.productType]} />
           {card.badge && <Tag label={card.badge} variant="badge" />}
           {card.meta && (
             <span
@@ -90,11 +91,8 @@ function ProductCard({ card }: { card: ProductCard }) {
           )}
         </div>
 
-        {/* Buy CTA — always leads to Hotmart checkout, never handled on this site */}
+        {/* CTA — available: Hotmart checkout. Coming soon: link to its own page. Sold out: disabled. */}
         <div className="flex items-center gap-4 pt-2">
-          {card.priceDisplay && (
-            <span className="text-dojo-white/60 text-[15px] font-medium">{card.priceDisplay}</span>
-          )}
           {available ? (
             <Button
               href={card.hotmartCheckoutUrl}
@@ -106,8 +104,17 @@ function ProductCard({ card }: { card: ProductCard }) {
               {ctaLabel}
               <IconArrowRight size="1em" strokeWidth={2} className="inline-block" />
             </Button>
-          ) : (
+          ) : soldOut ? (
             <span className="font-bold text-[15px] text-dojo-white/30 cursor-not-allowed">{ctaLabel}</span>
+          ) : (
+            <Button
+              href={card.href}
+              variant="underline"
+              className="text-[15px] text-dojo-white border-accent border-b-2 hover:text-accent"
+            >
+              {viewLabel}
+              <IconArrowRight size="1em" strokeWidth={2} className="inline-block" />
+            </Button>
           )}
         </div>
       </div>
@@ -123,7 +130,7 @@ export default function ProgramsSectionClient({ cards }: { cards: ProductCard[] 
       ? cards
       : activeTab === 'Programas'
       ? cards.filter((c) => c.category === 'programa')
-      : cards.filter((c) => c.category === 'curso')
+      : cards.filter((c) => c.category === 'sprint')
 
   return (
     <section id="programs" className="w-full px-4 md:px-page py-8">

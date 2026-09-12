@@ -13,12 +13,17 @@ type ProductRow = {
   subtitle: string | null
   long_description: string | null
   featured_image: string | null
+  featured_image_mobile: string | null
+  thumbnail: string | null
   duration: string | null
   level: string | null
   format: string | null
-  price_display: string | null
+  price_usd: string | null
+  price_ars: string | null
   hotmart_checkout_url: string | null
   outcomes: string[]
+  target_audience: string[]
+  not_for: string[]
   modules: { title: string; description: string }[]
   cta_text: string | null
   category: string | null
@@ -38,12 +43,16 @@ function toProgram(row: ProductRow): ProgramTemplateData {
     subtitle: row.subtitle ?? '',
     overview: row.long_description ?? '',
     heroImage: row.featured_image ?? '',
+    heroImageMobile: row.featured_image_mobile ?? row.featured_image ?? '',
     duration: row.duration ?? '',
     level: row.level ?? '',
     format: row.format ?? '',
-    priceDisplay: row.price_display ?? '',
+    priceUsd: row.price_usd ?? '',
+    priceArs: row.price_ars ?? '',
     hotmartCheckoutUrl: row.hotmart_checkout_url ?? '',
     outcomes: row.outcomes ?? [],
+    targetAudience: row.target_audience ?? [],
+    notFor: row.not_for ?? [],
     modules: row.modules ?? [],
     ctaLabel: row.cta_text ?? 'Ver programa',
     featured: row.featured,
@@ -56,17 +65,21 @@ function toProgram(row: ProductRow): ProgramTemplateData {
 function toCourse(row: ProductRow): CourseTemplateData {
   return {
     slug: row.slug,
-    badge: row.category ?? 'curso',
+    badge: row.category ?? 'sprint',
     title: row.title,
     subtitle: row.subtitle ?? '',
     overview: row.long_description ?? '',
     heroImage: row.featured_image ?? '',
+    heroImageMobile: row.featured_image_mobile ?? row.featured_image ?? '',
     duration: row.duration ?? '',
     level: row.level ?? '',
     format: row.format ?? '',
-    priceDisplay: row.price_display ?? '',
+    priceUsd: row.price_usd ?? '',
+    priceArs: row.price_ars ?? '',
     hotmartCheckoutUrl: row.hotmart_checkout_url ?? '',
     outcomes: row.outcomes ?? [],
+    targetAudience: row.target_audience ?? [],
+    notFor: row.not_for ?? [],
     modules: row.modules ?? [],
     ctaLabel: row.cta_text ?? 'Empezar el curso',
     productType: row.product_type,
@@ -80,7 +93,6 @@ export async function getPrograms(): Promise<ProgramTemplateData[]> {
     .select('*')
     .eq('category', 'programa')
     .eq('active', true)
-    .neq('status', 'coming_soon')
     .order('sort_order', { ascending: true, nullsFirst: false })
     .order('id')
   return (data as ProductRow[] ?? []).map(toProgram)
@@ -90,9 +102,8 @@ export async function getCourses(): Promise<CourseTemplateData[]> {
   const { data } = await supabaseServer
     .from('products')
     .select('*')
-    .eq('category', 'curso')
+    .eq('category', 'sprint')
     .eq('active', true)
-    .neq('status', 'coming_soon')
     .order('sort_order', { ascending: true, nullsFirst: false })
     .order('id')
   return (data as ProductRow[] ?? []).map(toCourse)
@@ -115,7 +126,7 @@ export async function getCourseBySlug(slug: string): Promise<CourseTemplateData 
     .from('products')
     .select('*')
     .eq('slug', slug)
-    .eq('category', 'curso')
+    .eq('category', 'sprint')
     .eq('active', true)
     .neq('status', 'coming_soon')
     .single()
@@ -135,14 +146,15 @@ export type ProductCard = {
   meta: string | null
   href: string
   hotmartCheckoutUrl: string
-  priceDisplay: string
+  priceUsd: string
+  priceArs: string
 }
 
 export async function getProductCards(): Promise<ProductCard[]> {
   const { data } = await supabaseServer
     .from('products')
     .select(
-      'id, slug, title, subtitle, thumbnail, featured_image, launch_label, duration, category, product_type, status, hotmart_checkout_url, price_display'
+      'id, slug, title, subtitle, thumbnail, featured_image, launch_label, duration, category, product_type, status, hotmart_checkout_url, price_usd, price_ars'
     )
     .eq('active', true)
     .order('sort_order', { ascending: true, nullsFirst: false })
@@ -159,9 +171,10 @@ export async function getProductCards(): Promise<ProductCard[]> {
     subtitle: row.subtitle ?? '',
     badge: row.launch_label ?? null,
     meta: row.duration ?? null,
-    href: row.category === 'curso' ? `/courses/${row.slug}` : `/programs/${row.slug}`,
+    href: row.category === 'sprint' ? `/courses/${row.slug}` : `/programs/${row.slug}`,
     hotmartCheckoutUrl: row.hotmart_checkout_url ?? '',
-    priceDisplay: row.price_display ?? '',
+    priceUsd: row.price_usd ?? '',
+    priceArs: row.price_ars ?? '',
   }))
 }
 
@@ -181,23 +194,27 @@ export type ComingSoonData = {
   title: string
   subtitle: string
   description: string
+  featuredImage: string
+  thumbnail: string
 }
 
 export async function getComingSoonBySlug(slug: string): Promise<ComingSoonData | null> {
   const { data } = await supabaseServer
     .from('products')
-    .select('slug, title, subtitle, long_description, category')
+    .select('slug, title, subtitle, long_description, category, featured_image, thumbnail')
     .eq('slug', slug)
     .eq('status', 'coming_soon')
     .single()
   if (!data) return null
-  const row = data as Pick<ProductRow, 'slug' | 'title' | 'subtitle' | 'long_description' | 'category'>
+  const row = data as Pick<ProductRow, 'slug' | 'title' | 'subtitle' | 'long_description' | 'category' | 'featured_image' | 'thumbnail'>
   return {
     slug: row.slug,
     badge: row.category ?? 'próximamente',
     title: row.title,
     subtitle: row.subtitle ?? '',
     description: row.long_description ?? '',
+    featuredImage: row.featured_image ?? '',
+    thumbnail: row.thumbnail ?? '',
   }
 }
 

@@ -7,10 +7,13 @@ import {
   IconVocabulary,
   IconSparkles,
   IconPlayHandball,
+  IconArrowRight,
 } from '@tabler/icons-react'
 import DojoBreak from '@/components/DojoBreak'
 import BreakPicture from '@/components/BreakPicture'
-import CTABreak from '@/components/CTABreak'
+import { Tag } from '@/components/ui/Tag'
+import { Button } from '@/components/ui/Button'
+import type { ProgramTemplateData } from '@/components/Program-Template'
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
@@ -75,7 +78,7 @@ function DojoHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: EASE, delay: 0.1 }}
         >
-          Un espacio para quienes vivimos el diseño cada día.
+          Un espacio para quienes vivimos el diseño a diario.
         </motion.h1>
 
         <motion.p
@@ -201,7 +204,7 @@ function DojoWhy() {
             className="font-normal text-dojo-white"
             style={{ fontSize: 'clamp(28px, 5vw, 84px)', letterSpacing: '-0.02em', lineHeight: 1.05 }}
           >
-            ¿Por qué Dojo?
+            ¿Por qué &apos;Dojo&apos;?
           </motion.p>
 
           <motion.div
@@ -209,20 +212,20 @@ function DojoWhy() {
             variants={fadeUp}
             className="flex items-baseline gap-2"
           >
-            {['Practicá.', 'Aprendé.'].map((word) => (
+            {['Buscamos', 'ser', 'una', 'comunidad'].map((word) => (
               <span
                 key={word}
                 className="font-normal text-dojo-white"
-                style={{ fontSize: 'clamp(28px, 5vw, 84px)', letterSpacing: '-0.02em', lineHeight: 1.05 }}
+                style={{ fontSize: 'clamp(14px, 2.5vw, 42px)', letterSpacing: '-0.02em', lineHeight: 1.05 }}
               >
                 {word}
               </span>
             ))}
             <span
               className="font-semibold text-accent"
-              style={{ fontSize: 'clamp(28px, 5vw, 84px)', letterSpacing: '-0.02em', lineHeight: 1.05 }}
+              style={{ fontSize: 'clamp(14px, 2.5vw, 42px)', letterSpacing: '-0.02em', lineHeight: 1.05 }}
             >
-              Avanzá.
+              para Diseñadores.
             </span>
           </motion.div>
         </div>
@@ -251,6 +254,18 @@ function DojoWhy() {
             </span>
           </motion.p>
         </div>
+
+        {/* CTA — jumps to the SubscribeSection rendered below TheDojo on /the-dojo */}
+        <motion.div custom={4} variants={fadeUp}>
+          <Button
+            href="#subscribe"
+            variant="underline"
+            className="text-[24px] md:text-[32px] text-dojo-white border-accent border-b-2 hover:text-accent"
+          >
+            Sumarme al Dojo
+            <IconArrowRight size="1em" strokeWidth={2} className="inline-block" />
+          </Button>
+        </motion.div>
       </motion.div>
     </section>
   )
@@ -350,7 +365,11 @@ function DojoClose() {
 }
 
 // ── Main export ────────────────────────────────────────────────────────────────
-export default function TheDojo() {
+interface TheDojoProps {
+  featuredProduct?: ProgramTemplateData | null
+}
+
+export default function TheDojo({ featuredProduct }: TheDojoProps) {
   return (
     <>
       <DojoHero />
@@ -359,13 +378,50 @@ export default function TheDojo() {
       <DojoWhy />
       <DojoBreak />
       <DojoQuote />
-      <BreakPicture />
-      <CTABreak
-        text="¿Querés ser parte de la construcción del Dojo?"
-        buttonLabel="Hablemos →"
-        buttonHref="https://docs.google.com/forms/d/e/1FAIpQLSdtNsAKm3HnhdmksOCmfmp5lEGE38V-LtzOOXMtc-glVSx07Q/viewform?usp=preview"
-        buttonTarget="_blank"
-      />
+      {featuredProduct?.heroImage ? (
+        <BreakPicture
+          src={featuredProduct.heroImage}
+          srcMobile={featuredProduct.heroImageMobile}
+          fit="contain"
+          overlay={false}
+        >
+          <div className="flex flex-col gap-4 max-w-3xl">
+            <h2
+              className="font-semibold text-[#fafafa]"
+              style={{ fontSize: 'clamp(48px, 4.17vw, 80px)', letterSpacing: '-0.02em', lineHeight: 1.1 }}
+            >
+              {featuredProduct.title}
+            </h2>
+            <p
+              className="font-semibold text-[#fafafa]"
+              style={{ fontSize: 'clamp(20px, 1.67vw, 32px)', letterSpacing: '-0.02em' }}
+            >
+              {featuredProduct.subtitle}
+            </p>
+          </div>
+
+          {featuredProduct.highlightTags && featuredProduct.highlightTags.length > 0 && (
+            <div className="flex flex-wrap gap-4">
+              {featuredProduct.highlightTags.map((tag) => (
+                <Tag key={tag.label} label={tag.label} icon={tag.icon} />
+              ))}
+            </div>
+          )}
+
+          <div>
+            <Button
+              href={`/programs/${featuredProduct.slug}`}
+              variant="underline"
+              className="text-[32px] text-[#fafafa] border-accent border-b-2 hover:text-accent"
+            >
+              Ver Programa
+              <IconArrowRight size="1em" strokeWidth={2} className="inline-block" />
+            </Button>
+          </div>
+        </BreakPicture>
+      ) : (
+        <BreakPicture />
+      )}
       <DojoClose />
     </>
   )

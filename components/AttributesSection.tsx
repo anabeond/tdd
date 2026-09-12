@@ -4,10 +4,10 @@ import { motion } from 'framer-motion'
 import {
   IconArrowRight,
   IconVideo,
-  IconBrandTwitch,
+  IconBuildingMonument,
   IconBrandFigma,
-  IconClockHour4,
-  IconLayoutGrid,
+  IconShoe,
+  IconBrandDiscord,
 } from '@tabler/icons-react'
 import { Button } from '@/components/ui/Button'
 
@@ -72,7 +72,7 @@ export default function AttributesSection() {
                 >
                   Aprendé a tu ritmo
                 </p>
-                <p className="font-light text-dojo-white/50" style={{ fontSize: 16, lineHeight: 1.5 }}>
+                <p className="font-light text-muted-desc" style={{ fontSize: 16, lineHeight: 1.5 }}>
                   Tanto Cursos como Programas cuentan con horas de material grabado en video que se actualiza constantemente.
                 </p>
               </div>
@@ -83,7 +83,7 @@ export default function AttributesSection() {
           <motion.div custom={2} variants={fadeUp} className="row-span-1">
             <div className="bg-accent h-full min-h-[160px] sm:min-h-[380px] flex items-center justify-center p-10 border border-accent">
               <p
-                className="font-bold text-dojo-white tracking-widest uppercase text-center"
+                className="font-bold text-[#fafafa] tracking-widest uppercase text-center"
                 style={{ fontSize: 'clamp(20px, 1.875vw, 36px)', letterSpacing: '0.12em' }}
               >
                 ¿Por qué el Dojo?
@@ -94,7 +94,7 @@ export default function AttributesSection() {
           {/* Row 1 — right */}
           <motion.div custom={3} variants={fadeUp}>
             <Cell className="h-full">
-              <IconLayoutGrid size={40} className="text-dojo-white/60" strokeWidth={1.5} />
+              <IconBrandDiscord size={40} className="text-dojo-white/60" strokeWidth={1.5} />
               <div className="flex flex-col gap-2">
                 <p
                   className="font-semibold text-dojo-white"
@@ -102,7 +102,7 @@ export default function AttributesSection() {
                 >
                   Programas con Acompañamiento
                 </p>
-                <p className="font-light text-dojo-white/50" style={{ fontSize: 16, lineHeight: 1.5 }}>
+                <p className="font-light text-muted-desc" style={{ fontSize: 16, lineHeight: 1.5 }}>
                   Si sentís que algo te traba, podés despejar tus dudas en vivo.
                 </p>
               </div>
@@ -112,7 +112,7 @@ export default function AttributesSection() {
           {/* Row 2 — left */}
           <motion.div custom={4} variants={fadeUp}>
             <Cell className="h-full">
-              <IconClockHour4 size={40} className="text-dojo-white/60" strokeWidth={1.5} />
+              <IconShoe size={40} className="text-dojo-white/60" strokeWidth={1.5} />
               <div className="flex flex-col gap-2">
                 <p
                   className="font-semibold text-dojo-white"
@@ -120,7 +120,7 @@ export default function AttributesSection() {
                 >
                   Cursos Cortos / Sprints
                 </p>
-                <p className="font-light text-dojo-white/50" style={{ fontSize: 16, lineHeight: 1.5 }}>
+                <p className="font-light text-muted-desc" style={{ fontSize: 16, lineHeight: 1.5 }}>
                   Para aprender habilidades clave en poco tiempo.
                 </p>
               </div>
@@ -138,7 +138,7 @@ export default function AttributesSection() {
                 >
                   Figma, IA y más
                 </p>
-                <p className="font-light text-dojo-white/50" style={{ fontSize: 16, lineHeight: 1.5 }}>
+                <p className="font-light text-muted-desc" style={{ fontSize: 16, lineHeight: 1.5 }}>
                   Cada herramienta relevante que necesitas aprender hoy.
                 </p>
               </div>
@@ -148,7 +148,7 @@ export default function AttributesSection() {
           {/* Row 2 — right */}
           <motion.div custom={6} variants={fadeUp}>
             <Cell className="h-full">
-              <IconBrandTwitch size={40} className="text-dojo-white/60" strokeWidth={1.5} />
+              <IconBuildingMonument size={40} className="text-dojo-white/60" strokeWidth={1.5} />
               <div className="flex flex-col gap-2">
                 <p
                   className="font-semibold text-dojo-white"
@@ -156,8 +156,8 @@ export default function AttributesSection() {
                 >
                   Encuentros en Buenos Aires
                 </p>
-                <p className="font-light text-dojo-white/50" style={{ fontSize: 16, lineHeight: 1.5 }}>
-                  Muy Pronto.
+                <p className="font-light text-muted-desc" style={{ fontSize: 16, lineHeight: 1.5 }}>
+                  Pronto.
                 </p>
               </div>
             </Cell>

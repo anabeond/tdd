@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { IconBrandTwitch, IconMenu2, IconX } from '@tabler/icons-react'
+import { IconBrandTwitch, IconBrandFigma, IconBrandInstagram, IconMenu2, IconX } from '@tabler/icons-react'
 import { NavDropdown } from '@/components/ui/NavDropdown'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { useTheme } from '@/components/ThemeProvider'
 
 type NavProduct = { slug: string; title: string; category: string }
 
@@ -50,6 +52,7 @@ export default function NavbarClient({ programs, courses }: NavbarClientProps) {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const pathname = usePathname()
+  const { theme } = useTheme()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -89,7 +92,6 @@ export default function NavbarClient({ programs, courses }: NavbarClientProps) {
         ...courses.map((c) => ({ label: c.title, href: `/courses/${c.slug}` })),
       ],
     },
-    { label: 'AI APPROACH', href: '/ai-approach', dropdown: false },
   ]
 
   return (
@@ -99,12 +101,10 @@ export default function NavbarClient({ programs, courses }: NavbarClientProps) {
         animate={{
           top: scrolled ? 0 : 32,
           height: scrolled ? 56 : 104,
-          backgroundColor: scrolled
-            ? 'rgb(0, 0, 0)'
-            : 'rgb(0, 0, 0)',
         }}
         style={{
           paddingInline: '1em',
+          backgroundColor: 'var(--dark-blue)',
           backdropFilter: scrolled ? 'blur(16px)' : 'none',
         }}
         transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
@@ -117,7 +117,10 @@ export default function NavbarClient({ programs, courses }: NavbarClientProps) {
             width={248}
             height={40}
             className="block w-[160px] md:w-[248px] h-auto object-contain origin-left"
-            animate={{ scale: scrolled ? 0.7016 : 1 }}
+            animate={{
+              scale: scrolled ? 0.7016 : 1,
+              filter: theme === 'light' ? 'brightness(0) saturate(100%)' : 'none',
+            }}
             whileHover={{
               filter:
                 'brightness(0) saturate(100%) invert(23%) sepia(92%) saturate(2921%) hue-rotate(11deg) brightness(99%) contrast(95%)',
@@ -177,8 +180,9 @@ export default function NavbarClient({ programs, courses }: NavbarClientProps) {
           ))}
         </nav>
 
-        {/* Desktop Social Icon */}
-        <div className="hidden md:flex w-[248px] justify-end">
+        {/* Desktop Social Icon + Theme Toggle */}
+        <div className="hidden md:flex w-[248px] justify-end items-center gap-4">
+          <ThemeToggle />
           <a
             href="https://twitch.tv/thedesigndojo"
             target="_blank"
@@ -187,6 +191,24 @@ export default function NavbarClient({ programs, courses }: NavbarClientProps) {
             aria-label="Twitch"
           >
             <IconBrandTwitch className="size-full text-dojo-white" stroke={1.7} />
+          </a>
+          <a
+            href="https://www.figma.com/@thedesigndojo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="size-8 opacity-80 hover:opacity-100 transition-opacity"
+            aria-label="Figma"
+          >
+            <IconBrandFigma className="size-full text-dojo-white" stroke={1.7} />
+          </a>
+          <a
+            href="https://www.instagram.com/the.design.dojo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="size-8 opacity-80 hover:opacity-100 transition-opacity"
+            aria-label="Instagram"
+          >
+            <IconBrandInstagram className="size-full text-dojo-white" stroke={1.7} />
           </a>
         </div>
 
@@ -244,16 +266,41 @@ export default function NavbarClient({ programs, courses }: NavbarClientProps) {
                 </a>
               ))}
             </nav>
-            <a
-              href="https://twitch.tv/thedesigndojo"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 text-dojo-white/60"
-              aria-label="Twitch"
-            >
-              <IconBrandTwitch size={24} stroke={1.7} />
-              <span className="font-medium text-[14px] tracking-widest uppercase">Twitch</span>
-            </a>
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-4">
+                <a
+                  href="https://twitch.tv/thedesigndojo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-dojo-white/60"
+                  aria-label="Twitch"
+                >
+                  <IconBrandTwitch size={24} stroke={1.7} />
+                  <span className="font-medium text-[14px] tracking-widest uppercase">Twitch</span>
+                </a>
+                <a
+                  href="https://www.figma.com/@thedesigndojo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-dojo-white/60"
+                  aria-label="Figma"
+                >
+                  <IconBrandFigma size={24} stroke={1.7} />
+                  <span className="font-medium text-[14px] tracking-widest uppercase">Figma</span>
+                </a>
+                <a
+                  href="https://www.instagram.com/the.design.dojo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-dojo-white/60"
+                  aria-label="Instagram"
+                >
+                  <IconBrandInstagram size={24} stroke={1.7} />
+                  <span className="font-medium text-[14px] tracking-widest uppercase">Instagram</span>
+                </a>
+              </div>
+              <ThemeToggle />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

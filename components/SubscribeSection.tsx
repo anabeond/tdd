@@ -64,7 +64,7 @@ export default function SubscribeSection() {
             lineHeight: 1.1,
           }}
         >
-          Recibí contenidos especiales
+          Recibí accesos anticipados
         </h2>
 
         {/* Subtitle */}
@@ -72,7 +72,7 @@ export default function SubscribeSection() {
           className="font-light text-dojo-white/50"
           style={{ fontSize: 'clamp(28px, 2.5vw, 48px)', letterSpacing: '-0.02em', lineHeight: 1.2 }}
         >
-          Acceso anticipado y algunas sorpresas en el camino.
+          y algunas sorpresas en el camino.
         </p>
 
         {status === 'success' ? (
@@ -141,7 +141,7 @@ export default function SubscribeSection() {
                   className="text-[20px] md:text-[32px] text-dojo-white border-accent border-b-2 hover:text-accent whitespace-nowrap disabled:opacity-50"
                   disabled={status === 'loading'}
                 >
-                  {status === 'loading' ? 'Enviando...' : 'Suscribirme'}
+                  {status === 'loading' ? 'Enviando...' : 'Suscribirte'}
                   <IconArrowRight size="1em" strokeWidth={2} className="inline-block" />
                 </Button>
               </div>

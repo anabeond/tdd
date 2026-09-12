@@ -2,17 +2,17 @@
 
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
-import { Tag } from '@/components/ui/Tag'
 import DojoBreak from '@/components/DojoBreak'
 import BreakPicture from '@/components/BreakPicture'
 import AttributesSection from '@/components/AttributesSection'
-import { IconArrowRight } from '@tabler/icons-react'
-import { PRODUCT_TYPE_LABELS, getCtaLabel } from '@/lib/productType'
+import { IconArrowRight, IconBrandDiscord } from '@tabler/icons-react'
+import { getCtaLabel } from '@/lib/productType'
 import type { ProductStatus, ProductType } from '@/lib/products'
 
 export type ProgramModule = {
 	title: string
 	description: string
+	lessons?: number
 }
 
 export type ProgramTemplateData = {
@@ -22,12 +22,16 @@ export type ProgramTemplateData = {
 	subtitle: string
 	overview: string
 	heroImage: string
+	heroImageMobile: string
 	duration: string
 	level: string
 	format: string
-	priceDisplay: string
+	priceUsd: string
+	priceArs: string
 	hotmartCheckoutUrl: string
 	outcomes: string[]
+	targetAudience: string[]
+	notFor: string[]
 	modules: ProgramModule[]
 	ctaLabel: string
 	featured?: boolean
@@ -38,6 +42,10 @@ export type ProgramTemplateData = {
 
 type ProgramTemplateProps = {
 	program: ProgramTemplateData
+}
+
+function PriceDisplay({ priceArs }: { priceArs: string }) {
+	return <span className="text-dojo-white">{priceArs}</span>
 }
 
 export default function ProgramTemplate({ program }: ProgramTemplateProps) {
@@ -51,33 +59,48 @@ export default function ProgramTemplate({ program }: ProgramTemplateProps) {
 						whileInView={{ opacity: 1, y: 0 }}
 						viewport={{ once: true }}
 						transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-						className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-end"
+						className="flex flex-col gap-5"
 					>
-						<div className="flex flex-col gap-5">
-							<div className="flex items-center gap-3">
-								<p
-									className="font-semibold text-dojo-white/75 uppercase"
-									style={{ fontSize: 13, letterSpacing: '0.08em' }}
-								>
-									/{program.badge}
-								</p>
-								<Tag label={PRODUCT_TYPE_LABELS[program.productType]} />
-							</div>
-							<h1
-								className="font-semibold"
-								style={{ fontSize: 'clamp(40px, 6vw, 92px)', letterSpacing: '-0.03em', lineHeight: 1.02 }}
-							>
-								{program.title}
-							</h1>
-							<p
-								className="text-dojo-white/85"
-								style={{ fontSize: 'clamp(20px, 2vw, 30px)', letterSpacing: '-0.02em', lineHeight: 1.2 }}
-							>
-								{program.subtitle}
-							</p>
-						</div>
+						<p
+							className="font-semibold text-dojo-white/75 uppercase"
+							style={{ fontSize: 13, letterSpacing: '0.08em' }}
+						>
+							/{program.badge}
+						</p>
+						<h1
+							className="font-semibold"
+							style={{ fontSize: 'clamp(40px, 6vw, 92px)', letterSpacing: '-0.03em', lineHeight: 1.02 }}
+						>
+							{program.title}
+						</h1>
+						<p
+							className="text-dojo-white/85"
+							style={{ fontSize: 'clamp(20px, 2vw, 30px)', letterSpacing: '-0.02em', lineHeight: 1.2 }}
+						>
+							{program.subtitle}
+						</p>
+					</motion.div>
 
-						<div className="grid grid-cols-3 gap-4 border border-dojo-white/20 p-4">
+					<motion.div
+						initial={{ opacity: 0, y: 24 }}
+						whileInView={{ opacity: 1, y: 0 }}
+						viewport={{ once: true, margin: '-80px' }}
+						transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+						className="relative w-full overflow-hidden"
+						style={{ aspectRatio: '16 / 8' }}
+					>
+						<img src={program.heroImage} alt={program.title} className="w-full h-full object-cover" />
+						<div className="absolute inset-0 bg-gradient-to-r from-dark-blue/45 via-dark-blue/10 to-transparent pointer-events-none" />
+					</motion.div>
+
+					<motion.div
+						initial={{ opacity: 0, y: 20 }}
+						whileInView={{ opacity: 1, y: 0 }}
+						viewport={{ once: true, margin: '-80px' }}
+						transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+						className="flex flex-wrap items-center justify-between gap-x-8 gap-y-5 border border-dojo-white/20 p-4"
+					>
+						<div className="flex flex-wrap items-center gap-8">
 							<div className="flex flex-col gap-1">
 								<span className="text-dojo-white/60 text-[11px] uppercase tracking-[1.5px]">Duracion</span>
 								<span className="text-[16px] font-semibold">{program.duration}</span>
@@ -91,18 +114,14 @@ export default function ProgramTemplate({ program }: ProgramTemplateProps) {
 								<span className="text-[16px] font-semibold">{program.format}</span>
 							</div>
 						</div>
-					</motion.div>
 
-					<motion.div
-						initial={{ opacity: 0, y: 24 }}
-						whileInView={{ opacity: 1, y: 0 }}
-						viewport={{ once: true, margin: '-80px' }}
-						transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-						className="relative w-full md:w-1/2 overflow-hidden"
-						style={{ aspectRatio: '16 / 8' }}
-					>
-						<img src={program.heroImage} alt={program.title} className="w-full h-full object-cover" />
-						<div className="absolute inset-0 bg-gradient-to-r from-dark-blue/45 via-dark-blue/10 to-transparent pointer-events-none" />
+						{/* Discord — common to every program */}
+						<div className="flex items-center gap-2">
+							<IconBrandDiscord size={24} className="text-dojo-white/60 shrink-0" strokeWidth={1.5} />
+							<span className="text-dojo-white/60 text-[13px] leading-[1.3]">
+								Canal privado en Discord
+							</span>
+						</div>
 					</motion.div>
 
 					<motion.div
@@ -112,27 +131,76 @@ export default function ProgramTemplate({ program }: ProgramTemplateProps) {
 						transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
 						className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12"
 					>
-						<div className="flex flex-col gap-5">
-							<h2 className="font-semibold text-[34px] tracking-[-0.02em]">Overview</h2>
-							<p className="text-dojo-white/85 text-[18px] leading-[1.55]">{program.overview}</p>
-							<ul className="flex flex-col gap-2">
-								{program.outcomes.map((outcome) => (
-									<li key={outcome} className="text-dojo-white text-[16px] leading-[1.45]">
-										{'-> '} {outcome}
-									</li>
-								))}
-							</ul>
+						<div className="flex flex-col gap-10">
+							{/* Qué vas a aprender — sticker + title span full width, copy flows as balanced 2-column text below it */}
+							<div className="flex flex-col gap-5">
+								<img src="/images/STICKER.png" alt="" width={150} height={150} />
+								<h2 className="font-semibold text-[34px] tracking-[-0.02em]">Qué vas a aprender</h2>
+								<div className="sm:columns-2 sm:gap-8 [column-fill:balance]">
+									<p className="font-semibold text-[22px] tracking-[-0.02em] leading-[1.25] pb-5 break-inside-avoid">
+										{program.overview}
+									</p>
+									<ul className="mt-2">
+										{program.outcomes.map((outcome) => (
+											<li
+												key={outcome}
+												className="text-dojo-white text-[16px] leading-[1.45] mt-2 break-inside-avoid"
+											>
+												{'• '} {outcome}
+											</li>
+										))}
+									</ul>
+								</div>
+							</div>
+
+							{/* A quién va dirigido / Para quién no es — side by side */}
+							{(program.targetAudience.length > 0 || program.notFor.length > 0) && (
+								<div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+									{program.targetAudience.length > 0 && (
+										<div className="flex flex-col gap-3">
+											<h2 className="font-semibold text-[24px] tracking-[-0.02em]">A quién va dirigido</h2>
+											<ul className="flex flex-col gap-2">
+												{program.targetAudience.map((item) => (
+													<li key={item} className="text-dojo-white text-[16px] leading-[1.45]">
+														{'• '} {item}
+													</li>
+												))}
+											</ul>
+										</div>
+									)}
+
+									{program.notFor.length > 0 && (
+										<div className="flex flex-col gap-3">
+											<h2 className="font-semibold text-[24px] tracking-[-0.02em]">Para quién no es</h2>
+											<ul className="flex flex-col gap-2">
+												{program.notFor.map((item) => (
+													<li key={item} className="text-dojo-white/60 text-[16px] leading-[1.45]">
+														{'• '} {item}
+													</li>
+												))}
+											</ul>
+										</div>
+									)}
+								</div>
+							)}
 						</div>
 
 						<div className="flex flex-col gap-4">
-							<h2 className="font-semibold text-[34px] tracking-[-0.02em]">Modulos</h2>
+							<h2 className="font-semibold text-[34px] tracking-[-0.02em]">Módulos</h2>
 							<div className="flex flex-col border border-dojo-white/20">
 								{program.modules.map((module, index) => (
 									<div
 										key={module.title}
 										className="p-5 border-b border-dojo-white/15 last:border-b-0"
 									>
-										<p className="text-dojo-white/60 text-[12px] uppercase tracking-[1.4px]">Modulo {index + 1}</p>
+										<div className="flex items-center justify-between gap-4">
+											<p className="text-dojo-white/60 text-[12px] uppercase tracking-[1.4px]">Módulo {index + 1}</p>
+											{typeof module.lessons === 'number' && (
+												<p className="text-dojo-white/60 text-[12px] uppercase tracking-[1.4px]">
+													{module.lessons} {module.lessons === 1 ? 'clase' : 'clases'}
+												</p>
+											)}
+										</div>
 										<h3 className="font-semibold text-[22px] tracking-[-0.02em] mt-1">{module.title}</h3>
 										<p className="text-dojo-white/82 text-[15px] leading-[1.5] mt-2">{module.description}</p>
 									</div>
@@ -157,7 +225,7 @@ export default function ProgramTemplate({ program }: ProgramTemplateProps) {
 				>
 					{/* Left — title + subtitle */}
 					<div className="flex-1 flex flex-col justify-between gap-8 p-8 md:p-16 border-b md:border-b-0 md:border-r border-dojo-white/10">
-						<p className="font-medium text-dojo-white/40 text-[13px] uppercase tracking-[0.1em]">/{program.badge}</p>
+						<p className="font-medium text-accent text-[13px] uppercase tracking-[0.1em]">/{program.badge}</p>
 						<div className="flex flex-col gap-4">
 							<h2
 								className="font-semibold text-dojo-white"
@@ -173,20 +241,19 @@ export default function ProgramTemplate({ program }: ProgramTemplateProps) {
 								{program.subtitle}
 							</p>
 						</div>
-						<div className="h-px bg-dojo-white/10" />
 					</div>
 
 					{/* Right — price + buttons */}
 					<div className="w-full md:w-[480px] md:shrink-0 flex flex-col justify-between gap-8 p-8 md:p-16">
 						<div className="flex flex-col gap-2">
-							<p className="font-medium text-dojo-white/40 text-[13px] uppercase tracking-[0.1em]">Valor del Programa</p>
-							{program.priceDisplay && (
-								<p
-									className="font-semibold text-dojo-white"
-									style={{ fontSize: 'clamp(40px, 4vw, 72px)', letterSpacing: '-0.03em', lineHeight: 1 }}
+							<p className="font-medium text-accent text-[13px] uppercase tracking-[0.1em]">Valor del Programa</p>
+							{program.priceArs && (
+								<div
+									className="font-semibold"
+									style={{ fontSize: 'clamp(22px, 2.2vw, 40px)', letterSpacing: '-0.03em', lineHeight: 1 }}
 								>
-									{program.priceDisplay}
-								</p>
+									<PriceDisplay priceArs={program.priceArs} />
+								</div>
 							)}
 						</div>
 
@@ -196,25 +263,29 @@ export default function ProgramTemplate({ program }: ProgramTemplateProps) {
 									href={program.hotmartCheckoutUrl}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="w-full justify-center text-[16px]"
+									variant="underline"
+									className="self-start text-[22px] text-dojo-white border-accent border-b-2 hover:text-accent"
 								>
 									{getCtaLabel(program.productType, program.status)}
+									<IconArrowRight size="1em" strokeWidth={2} className="inline-block" />
 								</Button>
 							) : (
 								<span className="inline-flex items-center justify-center gap-4 font-medium text-[16px] tracking-[-0.02em] text-dojo-white/30 cursor-not-allowed border border-dojo-white/15 py-3 w-full">
 									{getCtaLabel(program.productType, program.status)}
 								</span>
 							)}
-							<p className="font-light text-dojo-white/30 text-[13px] text-center">
-								La compra se procesa en Hotmart.
-							</p>
 						</div>
 					</div>
 				</motion.div>
 			</section>
 
 			{/* ── Picture break ── */}
-			<BreakPicture />
+			<BreakPicture
+				src={program.heroImage}
+				srcMobile={program.heroImageMobile}
+				fit="contain"
+				overlay={false}
+			/>
 
 			{/* ── Attributes ── */}
 			<AttributesSection />
@@ -233,7 +304,7 @@ export default function ProgramTemplate({ program }: ProgramTemplateProps) {
 				>
 					{/* Left — title + subtitle */}
 					<div className="flex-1 flex flex-col justify-between gap-8 p-8 md:p-16 border-b md:border-b-0 md:border-r border-dojo-white/10">
-						<p className="font-medium text-dojo-white/40 text-[13px] uppercase tracking-[0.1em]">/{program.badge}</p>
+						<p className="font-medium text-accent text-[13px] uppercase tracking-[0.1em]">/{program.badge}</p>
 						<div className="flex flex-col gap-4">
 							<h2
 								className="font-semibold text-dojo-white"
@@ -249,20 +320,19 @@ export default function ProgramTemplate({ program }: ProgramTemplateProps) {
 								{program.subtitle}
 							</p>
 						</div>
-						<div className="h-px bg-dojo-white/10" />
 					</div>
 
 					{/* Right — price + buttons */}
 					<div className="w-full md:w-[480px] md:shrink-0 flex flex-col justify-between gap-8 p-8 md:p-16">
 						<div className="flex flex-col gap-2">
-							<p className="font-medium text-dojo-white/40 text-[13px] uppercase tracking-[0.1em]">Valor del Programa</p>
-							{program.priceDisplay && (
-								<p
-									className="font-semibold text-dojo-white"
-									style={{ fontSize: 'clamp(40px, 4vw, 72px)', letterSpacing: '-0.03em', lineHeight: 1 }}
+							<p className="font-medium text-accent text-[13px] uppercase tracking-[0.1em]">Valor del Programa</p>
+							{program.priceArs && (
+								<div
+									className="font-semibold"
+									style={{ fontSize: 'clamp(22px, 2.2vw, 40px)', letterSpacing: '-0.03em', lineHeight: 1 }}
 								>
-									{program.priceDisplay}
-								</p>
+									<PriceDisplay priceArs={program.priceArs} />
+								</div>
 							)}
 						</div>
 
@@ -272,18 +342,17 @@ export default function ProgramTemplate({ program }: ProgramTemplateProps) {
 									href={program.hotmartCheckoutUrl}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="w-full justify-center text-[16px]"
+									variant="underline"
+									className="self-start text-[22px] text-dojo-white border-accent border-b-2 hover:text-accent"
 								>
 									{getCtaLabel(program.productType, program.status)}
+									<IconArrowRight size="1em" strokeWidth={2} className="inline-block" />
 								</Button>
 							) : (
 								<span className="inline-flex items-center justify-center gap-4 font-medium text-[16px] tracking-[-0.02em] text-dojo-white/30 cursor-not-allowed border border-dojo-white/15 py-3 w-full">
 									{getCtaLabel(program.productType, program.status)}
 								</span>
 							)}
-							<p className="font-light text-dojo-white/30 text-[13px] text-center">
-								La compra se procesa en Hotmart.
-							</p>
 						</div>
 					</div>
 				</motion.div>

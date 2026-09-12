@@ -10,7 +10,7 @@ export function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label="Toggle theme"
-      className="flex items-center gap-1 rounded-full border border-dojo-white/20 bg-dojo-white/5 backdrop-blur-sm px-4 py-2 cursor-pointer hover:border-dojo-white/40 transition-colors duration-300"
+      className={`flex items-center gap-1 rounded-full backdrop-blur-sm px-4 py-2 cursor-pointer transition-colors duration-300 outline-none focus:outline-none focus-visible:outline-none ${theme === 'dark' ? 'bg-dojo-white/5' : 'bg-transparent'}`}
     >
       <span className="flex items-center gap-3">
         <IconMoon

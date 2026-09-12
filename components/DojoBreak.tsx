@@ -18,11 +18,11 @@ export default function DojoBreak() {
         style={{ y, width: 1741, height: 600, flexShrink: 0 }}
       >
         <img
-          src="https://www.figma.com/api/mcp/asset/fe2475bd-46ab-451c-a881-a321a148f74b"
+          src="/images/dojo-bio.png"
           alt="design dojo"
           width={1741}
           height={600}
-          style={{ display: 'block', width: '100%', height: '100%' }}
+          style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
           draggable={false}
         />
       </motion.div>

@@ -9,7 +9,7 @@ export default async function Highlight() {
   if (!program) return null
 
   return (
-    <section className="relative w-full overflow-hidden bg-dark-blue min-h-[420px] md:min-h-[791px]">
+    <section className="relative w-full overflow-hidden bg-dark-blue aspect-[1320/1832] md:aspect-auto md:min-h-[791px]">
       {/* Background image — right side, fading left */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Vintage TV texture overlay */}
@@ -20,19 +20,15 @@ export default async function Highlight() {
           fill
           className="object-cover opacity-30"
         />
-        {/* Gradient fade — content side */}
-        <div className="absolute inset-0 z-20 bg-gradient-to-r from-dark-blue via-dark-blue/90 to-transparent" />
-        {/* Featured person image — right */}
-        <div className="absolute right-0 top-0 h-full w-[55%] z-10">
+        {/* Featured product image — full bleed */}
+        <div className="absolute inset-0 z-10">
           <Image
-            src="/images/highlight-person.png"
-            alt="Featured"
+            src={program.heroImage || '/images/highlight-person.png'}
+            alt={program.title}
             fill
-            className="object-cover object-top"
+            className="object-contain object-right"
             priority
           />
-          {/* Inner gradient to blend */}
-          <div className="absolute inset-0 bg-gradient-to-r from-dark-blue/95 via-dark-blue/40 to-transparent" />
         </div>
       </div>
 
@@ -41,7 +37,7 @@ export default async function Highlight() {
         <div className="flex flex-col gap-4">
           {/* Title */}
           <h2
-            className="font-semibold text-dojo-white"
+            className="font-semibold text-[#fafafa]"
             style={{ fontSize: 'clamp(48px, 4.17vw, 80px)', letterSpacing: '-0.02em', lineHeight: 1.1 }}
           >
             {program.title}
@@ -49,7 +45,7 @@ export default async function Highlight() {
 
           {/* Subtitle */}
           <p
-            className="font-semibold text-dojo-white"
+            className="font-semibold text-[#fafafa]"
             style={{ fontSize: 'clamp(20px, 1.67vw, 32px)', letterSpacing: '-0.02em' }}
           >
             {program.subtitle}
@@ -70,7 +66,7 @@ export default async function Highlight() {
           <Button
             href={`/programs/${program.slug}`}
             variant="underline"
-            className="text-[32px] text-dojo-white border-accent border-b-2 hover:text-accent"
+            className="text-[32px] text-[#fafafa] border-accent border-b-2 hover:text-accent"
           >
             Ver Programa
             <IconArrowRight size="1em" strokeWidth={2} className="inline-block" />

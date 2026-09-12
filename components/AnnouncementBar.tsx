@@ -1,16 +1,20 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 
 export default function AnnouncementBar() {
   const [scrolled, setScrolled] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  if (pathname?.startsWith('/colors')) return null
 
   return (
     <motion.a
@@ -20,7 +24,7 @@ export default function AnnouncementBar() {
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
     >
       <p className="font-semibold text-black text-[14px] text-center leading-snug">
-        Programa Fundamentos de Diseño UX/UI - Comenzamos el 27 de Abril, Día del Diseño
+        Feliz Primavera 2026 🌻🌞 Usa 'OPEN-DOJO' para 50% Off en Fundamentos de UX/UI
       </p>
     </motion.a>
   )
