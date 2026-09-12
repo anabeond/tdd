@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
+import { SITE_URL } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'The Design Dojo — Aprendé Diseño UX/UI',
   description: 'Programas, sprints y mentorías de Diseño UX/UI para diseñadores latinoamericanos. Aprendé diseño real, con herramientas reales.',
-  alternates: { canonical: 'https://thedesigndojo.com' },
+  alternates: { canonical: SITE_URL },
 }
 
 import Navbar from '@/components/Navbar'
@@ -11,6 +12,7 @@ import { Button } from '@/components/ui/Button'
 import { IconArrowRight } from '@tabler/icons-react'
 import Hero from '@/components/Hero'
 import Highlight from '@/components/Highlight'
+import OpenDojoBreak from '@/components/OpenDojoBreak'
 import LogoCarousel from '@/components/LogoCarousel'
 import ProgramsSection from '@/components/ProgramsSection'
 import LivestreamsSection from '@/components/LivestreamsSection'
@@ -25,6 +27,7 @@ export default function Home() {
       <Navbar />
       <Hero />
       <Highlight />
+      <OpenDojoBreak />
 
       {/* Break Container — hidden per design annotation, to be revealed when ready */}
       <div className="hidden" aria-hidden="true">
@@ -43,7 +46,11 @@ export default function Home() {
         <ProgramsSection />
         <AttributesSection />
         <LivestreamsSection />
-        <MentorshipsSection />
+
+        {/* Mentorships section — hidden until ready to launch */}
+        <div className="hidden" aria-hidden="true">
+          <MentorshipsSection />
+        </div>
       </div>
 
       <SubscribeSection />

@@ -6,8 +6,7 @@ import Footer from '@/components/Footer'
 import CourseTemplate from '@/components/Course-Template'
 import ComingSoonTemplate from '@/components/ComingSoonTemplate'
 import { getCourseBySlug, getComingSoonBySlug } from '@/lib/products'
-
-const BASE_URL = 'https://thedesigndojo.com'
+import { SITE_URL as BASE_URL } from '@/lib/site-config'
 
 type CoursePageProps = {
   params: Promise<{ slug: string }>
@@ -52,10 +51,15 @@ export default async function CoursePage({ params }: CoursePageProps) {
       name: course.title,
       description: course.subtitle || course.overview,
       url: `${BASE_URL}/courses/${slug}`,
-      image: course.heroImage || undefined,
+      image: course.heroImage
+        ? (course.heroImage.startsWith('http') ? course.heroImage : `${BASE_URL}${course.heroImage}`)
+        : undefined,
       provider: { '@type': 'Organization', name: 'The Design Dojo', sameAs: BASE_URL },
       offers: {
         '@type': 'Offer',
+        ...(course.priceUsd
+          ? { price: course.priceUsd.replace(/[^0-9]/g, ''), priceCurrency: 'USD' }
+          : {}),
         availability:
           course.status === 'available' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
         url: course.hotmartCheckoutUrl || `${BASE_URL}/courses/${slug}`,
@@ -79,7 +83,6 @@ export default async function CoursePage({ params }: CoursePageProps) {
       <main className="bg-dark-blue min-h-screen">
         <Navbar />
         <ComingSoonTemplate product={comingSoon} />
-        <SubscribeSection />
         <Footer />
       </main>
     )

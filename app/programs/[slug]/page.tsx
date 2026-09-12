@@ -6,8 +6,7 @@ import Footer from '@/components/Footer'
 import ProgramTemplate from '@/components/Program-Template'
 import ComingSoonTemplate from '@/components/ComingSoonTemplate'
 import { getProgramBySlug, getComingSoonBySlug } from '@/lib/products'
-
-const BASE_URL = 'https://thedesigndojo.com'
+import { SITE_URL as BASE_URL } from '@/lib/site-config'
 
 type ProgramPageProps = {
   params: Promise<{ slug: string }>
@@ -52,10 +51,15 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
       name: program.title,
       description: program.subtitle || program.overview,
       url: `${BASE_URL}/programs/${slug}`,
-      image: program.heroImage || undefined,
+      image: program.heroImage
+        ? (program.heroImage.startsWith('http') ? program.heroImage : `${BASE_URL}${program.heroImage}`)
+        : undefined,
       provider: { '@type': 'Organization', name: 'The Design Dojo', sameAs: BASE_URL },
       offers: {
         '@type': 'Offer',
+        ...(program.priceArs
+          ? { price: program.priceArs.replace(/[^0-9]/g, ''), priceCurrency: 'ARS' }
+          : {}),
         availability:
           program.status === 'available' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
         url: program.hotmartCheckoutUrl || `${BASE_URL}/programs/${slug}`,
@@ -79,7 +83,6 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
       <main className="bg-dark-blue min-h-screen">
         <Navbar />
         <ComingSoonTemplate product={comingSoon} />
-        <SubscribeSection />
         <Footer />
       </main>
     )

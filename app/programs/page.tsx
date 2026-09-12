@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
+import { SITE_URL } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'Programas',
   description: 'Programas intensivos de Diseño UX/UI con acompañamiento grupal, sesiones en vivo y certificado. Para diseñadores latinoamericanos que quieren crecer en serio.',
-  alternates: { canonical: 'https://thedesigndojo.com/programs' },
+  alternates: { canonical: `${SITE_URL}/programs` },
   openGraph: {
     title: 'Programas de Diseño UX/UI | The Design Dojo',
     description: 'Programas intensivos con acompañamiento grupal, sesiones en vivo y certificado.',
@@ -17,7 +18,7 @@ import { Button } from '@/components/ui/Button'
 import { Tag } from '@/components/ui/Tag'
 import { ProductImage } from '@/components/ui/ProductImage'
 import { getPrograms } from '@/lib/products'
-import { IconArrowRight, IconUsers, IconVideo, IconCalendarEvent, IconBrandFigma, IconAward } from '@tabler/icons-react'
+import { IconArrowRight, IconBrandDiscord, IconVideo, IconCoffee, IconBrandFigma, IconAward } from '@tabler/icons-react'
 import CTABreak from '@/components/CTABreak'
 
 export default async function ProgramsPage() {
@@ -51,7 +52,7 @@ export default async function ProgramsPage() {
         <div className="flex flex-col gap-10">
 
           {/* Header */}
-          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-16">
+          <div className="flex flex-col gap-6">
             <h2
               className="font-medium text-dojo-white max-w-2xl"
               style={{ fontSize: 'clamp(28px, 2.5vw, 48px)', letterSpacing: '-0.02em', lineHeight: 1.15 }}
@@ -59,16 +60,6 @@ export default async function ProgramsPage() {
               Cuando te sumás a un Programa,{' '}
               <span className="font-light text-dojo-white/50">tenés todo esto.</span>
             </h2>
-            <div className="shrink-0 pt-1">
-              <Button
-                href="/the-dojo"
-                variant="underline"
-                className="text-[18px] text-dojo-white border-accent border-b-2 hover:text-accent whitespace-nowrap"
-              >
-                Conocé el Dojo
-                <IconArrowRight size="1em" strokeWidth={2} className="inline-block" />
-              </Button>
-            </div>
           </div>
 
           {/* Grid */}
@@ -88,15 +79,15 @@ export default async function ProgramsPage() {
 
             <div className="bg-accent flex items-center justify-center p-10 border border-accent min-h-[160px] sm:min-h-[380px]">
               <p
-                className="font-bold text-dojo-white tracking-widest uppercase text-center"
-                style={{ fontSize: 'clamp(20px, 1.875vw, 36px)', letterSpacing: '0.12em' }}
+                className="font-bold text-dojo-white tracking-widest text-center"
+                style={{ fontSize: 'clamp(20px, 1.875vw, 36px)', letterSpacing: '0.05em' }}
               >
-                Acompañamiento.
+                Acompañamiento Grupal.
               </p>
             </div>
 
             <div className="border border-dojo-white/10 p-8 flex flex-col justify-between gap-6">
-              <IconCalendarEvent size={40} className="text-dojo-white/60" strokeWidth={1.5} />
+              <IconCoffee size={40} className="text-dojo-white/60" strokeWidth={1.5} />
               <div className="flex flex-col gap-2">
                 <p className="font-semibold text-dojo-white" style={{ fontSize: 'clamp(22px, 1.67vw, 32px)', letterSpacing: '-0.02em', lineHeight: 1.15 }}>
                   Sesiones en vivo
@@ -108,7 +99,7 @@ export default async function ProgramsPage() {
             </div>
 
             <div className="border border-dojo-white/10 p-8 flex flex-col justify-between gap-6">
-              <IconUsers size={40} className="text-dojo-white/60" strokeWidth={1.5} />
+              <IconBrandDiscord size={40} className="text-dojo-white/60" strokeWidth={1.5} />
               <div className="flex flex-col gap-2">
                 <p className="font-semibold text-dojo-white" style={{ fontSize: 'clamp(22px, 1.67vw, 32px)', letterSpacing: '-0.02em', lineHeight: 1.15 }}>
                   Comunidad
@@ -164,6 +155,11 @@ export default async function ProgramsPage() {
             >
               {/* Image */}
               <div className="relative w-full overflow-hidden bg-dojo-white/5" style={{ aspectRatio: '16/10' }}>
+                {program.status === 'coming_soon' && (
+                  <span className="absolute top-4 left-4 z-10 font-bold text-[12px] uppercase tracking-[0.1em] text-dojo-white bg-dark-blue/80 backdrop-blur-sm px-3 py-1.5">
+                    Próximamente
+                  </span>
+                )}
                 <ProductImage
                   src={program.heroImage}
                   alt={program.title}
@@ -217,7 +213,7 @@ export default async function ProgramsPage() {
                     variant="underline"
                     className="text-[15px] text-dojo-white border-accent border-b-2 hover:text-accent self-start"
                   >
-                    Ver Programa
+                    {program.status === 'coming_soon' ? 'Próximamente' : 'Ver Programa'}
                     <IconArrowRight size="1em" strokeWidth={2} className="inline-block" />
                   </Button>
                 </div>

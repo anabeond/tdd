@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: 'static-cdn.jtvnw.net' },
       { protocol: 'https', hostname: 'img.youtube.com' },
+      { protocol: 'https', hostname: 'dplmiinqmubpjbhepgfo.supabase.co' },
     ],
   },
 };

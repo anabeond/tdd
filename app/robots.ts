@@ -1,6 +1,14 @@
 import type { MetadataRoute } from 'next'
+import { SITE_URL } from '@/lib/site-config'
 
 export default function robots(): MetadataRoute.Robots {
+  if (process.env.COMING_SOON === 'true') {
+    return {
+      rules: [{ userAgent: '*', disallow: '/' }],
+      sitemap: `${SITE_URL}/sitemap.xml`,
+    }
+  }
+
   return {
     rules: [
       {
@@ -9,6 +17,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/'],
       },
     ],
-    sitemap: 'https://thedesigndojo.com/sitemap.xml',
+    sitemap: `${SITE_URL}/sitemap.xml`,
   }
 }
