@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
 import { IconArrowRight, IconCheck } from '@tabler/icons-react'
@@ -278,13 +279,16 @@ export default function ColorsPageClient({ initialTally }: { initialTally: Color
           </p>
         </div>
 
-        {/* Logo mark — white-fill asset, forced black on this light page */}
-        <img
-          src="/images/logo-footer.svg"
-          alt=""
-          className="size-12 md:size-16 shrink-0"
-          style={{ filter: 'brightness(0) saturate(100%)' }}
-        />
+        {/* Logo mark — the only way back, since this page has no navbar.
+            White-fill asset, forced black on this light page. */}
+        <Link href="/" aria-label="Volver al inicio" className="shrink-0 self-start hover:opacity-70">
+          <img
+            src="/images/logo-footer.svg"
+            alt=""
+            className="size-12 md:size-16"
+            style={{ filter: 'brightness(0) saturate(100%)' }}
+          />
+        </Link>
       </div>
     </main>
   )
