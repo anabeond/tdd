@@ -36,13 +36,13 @@ export const metadata: Metadata = {
     siteName: 'The Design Dojo',
     title: 'The Design Dojo — Aprendé Diseño UX/UI',
     description: 'Programas, sprints y mentorías de Diseño UX/UI para diseñadores latinoamericanos.',
-    images: [{ url: '/images/programs-card-1.jpg', width: 1200, height: 630, alt: 'The Design Dojo' }],
+    images: [{ url: '/images/tdd-thumbnail.png', width: 800, height: 600, alt: 'The Design Dojo' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'The Design Dojo — Aprendé Diseño UX/UI',
     description: 'Programas, sprints y mentorías de Diseño UX/UI para diseñadores latinoamericanos.',
-    images: ['/images/programs-card-1.jpg'],
+    images: ['/images/tdd-thumbnail.png'],
   },
   robots: {
     index: true,
