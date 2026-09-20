@@ -4,71 +4,71 @@ import { supabaseServer } from '@/lib/supabase-server'
 
 const brevo = new BrevoClient({ apiKey: process.env.BREVO_API_KEY! })
 const BREVO_POTENTIALS_LIST_ID = Number(process.env.BREVO_POTENTIALS_LIST_ID)
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export async function POST(req: NextRequest) {
-  const { name, email, productSlug } = await req.json()
+  let body: { name?: unknown; email?: unknown; productSlug?: unknown }
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
+  }
 
-  if (!name || !email || !productSlug) {
+  const { name, email, productSlug } = body
+  if (typeof name !== 'string' || typeof email !== 'string' || typeof productSlug !== 'string' || !name.trim() || !email.trim() || !productSlug) {
     return NextResponse.json({ error: 'Faltan campos requeridos.' }, { status: 400 })
   }
 
   const sanitizedEmail = email.trim().toLowerCase()
   const sanitizedName = name.trim()
 
-  // Look up product title
+  if (!EMAIL_RE.test(sanitizedEmail)) {
+    return NextResponse.json({ error: 'Email inválido.' }, { status: 422 })
+  }
+
   const { data: product } = await supabaseServer
     .from('products')
-    .select('title')
+    .select('slug, interest_brevo_list_id')
     .eq('slug', productSlug)
-    .single()
+    .eq('status', 'coming_soon')
+    .maybeSingle()
 
-  const productTitle = product?.title ?? productSlug
+  if (!product) {
+    return NextResponse.json({ error: 'Producto no encontrado.' }, { status: 404 })
+  }
 
-  // Save to Supabase (unique per product+email)
+  // Supabase is the source of truth (unique per product + email)
   const { error: dbError } = await supabaseServer
     .from('interest_signups')
     .insert({ name: sanitizedName, email: sanitizedEmail, product_slug: productSlug })
 
-  if (dbError) {
-    if (dbError.code === '23505') {
-      return NextResponse.json({ error: 'duplicate' }, { status: 409 })
-    }
+  const duplicate = dbError?.code === '23505'
+  if (dbError && !duplicate) {
     console.error('[interest] Supabase error:', dbError)
     return NextResponse.json({ error: 'Error al guardar. Intentá de nuevo.' }, { status: 500 })
   }
 
-  // Add to Brevo potentials list, appending to existing INTERESTED_IN if contact already exists
+  // Brevo is best-effort: one global "interesados" list plus one list per product.
+  // Also runs on duplicates so a previously failed Brevo sync heals on retry.
+  const listIds = [BREVO_POTENTIALS_LIST_ID, product.interest_brevo_list_id].filter(
+    (id): id is number => typeof id === 'number' && Number.isFinite(id)
+  )
+  if (!product.interest_brevo_list_id) {
+    console.error(`[interest] No interest_brevo_list_id for product "${productSlug}" — only added to the global list`)
+  }
+
   try {
-    let interestedIn = productTitle
-
-    try {
-      const existing = await brevo.contacts.getContactInfo(sanitizedEmail) as { attributes?: { INTERESTED_IN?: string } }
-      const current = existing?.attributes?.INTERESTED_IN
-      if (current && !current.split(',').map((s: string) => s.trim()).includes(productTitle)) {
-        interestedIn = `${current}, ${productTitle}`
-      } else if (current) {
-        interestedIn = current // already listed, no change
-      }
-    } catch {
-      // Contact doesn't exist yet — use productTitle as-is
-    }
-
     await brevo.contacts.createContact({
       email: sanitizedEmail,
-      attributes: {
-        FIRSTNAME: sanitizedName,
-        INTERESTED_IN: interestedIn,
-      },
-      listIds: [BREVO_POTENTIALS_LIST_ID],
+      attributes: { FIRSTNAME: sanitizedName },
+      listIds,
       updateEnabled: true,
     })
   } catch (err: unknown) {
     const status = (err as { statusCode?: number })?.statusCode
-    if (status !== 409) {
-      console.error('[interest] Brevo error:', err)
-      // Don't fail the request — data is already saved in Supabase
-    }
+    if (status !== 409) console.error('[interest] Brevo error:', err)
   }
 
+  if (duplicate) return NextResponse.json({ error: 'duplicate' }, { status: 409 })
   return NextResponse.json({ ok: true })
 }

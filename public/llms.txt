@@ -1,6 +1,6 @@
 # The Design Dojo
 
-> Escuela de diseño UX/UI en español para diseñadores latinoamericanos, fundada por Ana B. Wilhelm. Aprendizaje en vivo con proceso real de diseño, no solo teoría — canal insignia en Twitch todos los lunes a las 19:00 hs (ART).
+> Escuela de Diseño en español, fundada por Ana Beond (Ana B. Wilhelm) - Diseño en Vivo por Twitch todos los Lunes a las 19:00 hs (ART). Apende Fundamentos de Diseño UX/UI. 
 
 > Nota: el sitio público todavía muestra una pantalla "coming soon" — el catálogo de abajo es el contenido real, en preparación para el lanzamiento.
 
@@ -11,7 +11,7 @@
 
 ## Programas y cursos
 
-- [Fundamentos Escenciales del Diseño UX/UI](https://eldesigndojo.com/programs/fundamentals-ux-ui): Acompañamiento Grupal — disponible
+- [Fundamentos Esenciales del Diseño UX/UI](https://eldesigndojo.com/programs/fundamentals-ux-ui): Acompañamiento Grupal — disponible
 - [Figma All Access](https://eldesigndojo.com/courses/figma-all-access): Auto Layouts, Componentes y Variables — próximamente
 
 ## Comunidad

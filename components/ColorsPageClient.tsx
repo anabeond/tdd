@@ -339,7 +339,7 @@ export default function ColorsPageClient({ initialTally }: { initialTally: Color
             className="font-medium text-black"
             style={{ fontSize: 'clamp(16px, 2vw, 24px)', lineHeight: 1.25 }}
           >
-            *un píxel por email. Lo usamos solo para eso.
+            *un píxel por email. Al sumarte, te agregamos a nuestra lista para contarte novedades del Dojo.
           </p>
         </div>
 

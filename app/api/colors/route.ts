@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase-server'
 import { isColorKey, type ColorKey } from '@/lib/colors'
 import { getColorTally } from '@/lib/color-votes'
+import { upsertContact } from '@/lib/brevo'
+
+const BREVO_COLORS_LIST_ID = Number(process.env.BREVO_COLORS_LIST_ID)
 
 // Lets the mural keep refreshing itself while someone leaves the page open.
 export async function GET() {
@@ -60,6 +63,16 @@ export async function POST(req: NextRequest) {
         alreadySubmitted = true
         yourColor = raced.color as ColorKey
       }
+    }
+  }
+
+  // Brevo is best-effort; Supabase is the source of truth. Runs for repeat submissions too
+  // so a previously failed sync heals.
+  if (BREVO_COLORS_LIST_ID) {
+    try {
+      await upsertContact({ email, firstName: name, listIds: [BREVO_COLORS_LIST_ID] })
+    } catch (err) {
+      console.error('[colors] Brevo error:', err)
     }
   }
 
