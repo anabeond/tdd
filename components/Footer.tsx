@@ -24,7 +24,7 @@ export default function Footer() {
           <div className="flex flex-col gap-2">
             <p className="font-medium text-[18px] leading-none">The Design Dojo</p>
             <p className="font-normal text-[12px] tracking-[0.56px] uppercase opacity-80">
-              <a href="https://www.instagram.com/the.design.dojo" target="blank">@the.design.dojo</a>
+              <a href="https://www.instagram.com/the.design.dojo" target="_blank" rel="noopener noreferrer">@the.design.dojo</a>
             </p>
           </div>
 

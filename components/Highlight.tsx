@@ -12,14 +12,7 @@ export default async function Highlight() {
     <section className="relative w-full overflow-hidden bg-dark-blue aspect-[1320/1832] md:aspect-auto md:min-h-[791px]">
       {/* Background image — right side, fading left */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Vintage TV texture overlay */}
         <div className="absolute inset-0 z-10 bg-dark-blue/80 mix-blend-overlay" />
-        <Image
-          src="/images/highlight-vintage-tv.jpg"
-          alt=""
-          fill
-          className="object-cover opacity-30"
-        />
         {/* Featured product image — full bleed */}
         <div className="absolute inset-0 z-10">
           <Image

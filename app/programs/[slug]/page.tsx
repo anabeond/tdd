@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: ProgramPageProps): Promise<Me
     }
   }
 
-  const comingSoon = await getComingSoonBySlug(slug)
+  const comingSoon = await getComingSoonBySlug(slug, 'programa')
   if (comingSoon) {
     return {
       title: `${comingSoon.title} — Próximamente`,
@@ -88,7 +88,7 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
     )
   }
 
-  const comingSoon = await getComingSoonBySlug(slug)
+  const comingSoon = await getComingSoonBySlug(slug, 'programa')
   if (comingSoon) {
     return (
       <main className="bg-dark-blue min-h-screen">

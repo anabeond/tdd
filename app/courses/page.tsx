@@ -85,6 +85,11 @@ export default async function CoursesPage() {
                 className="relative w-full overflow-hidden bg-dojo-white/5"
                 style={{ aspectRatio: '16/10' }}
               >
+                {course.status === 'coming_soon' && (
+                  <span className="absolute top-4 left-4 z-10 font-bold text-[12px] uppercase tracking-[0.1em] text-dojo-white bg-dark-blue/80 backdrop-blur-sm px-3 py-1.5">
+                    Próximamente
+                  </span>
+                )}
                 <ProductImage
                   src={course.heroImage}
                   alt={course.title}
@@ -124,7 +129,7 @@ export default async function CoursesPage() {
                     variant="underline"
                     className="text-[15px] text-dojo-white border-accent border-b-2 hover:text-accent self-start"
                   >
-                    Ver Curso
+                    {course.status === 'coming_soon' ? 'Próximamente' : 'Ver Curso'}
                     <IconArrowRight size="1em" strokeWidth={2} className="inline-block" />
                   </Button>
                 </div>

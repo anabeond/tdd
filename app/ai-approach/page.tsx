@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: 'Nuestro Approach con IA',
   description: 'En The Design Dojo usamos IA como herramienta creativa, no como reemplazo. Conocé cómo integramos inteligencia artificial en el proceso de enseñanza del diseño.',
   alternates: { canonical: `${SITE_URL}/ai-approach` },
+  robots: { index: false, follow: false },
 }
 
 import Navbar from '@/components/Navbar'

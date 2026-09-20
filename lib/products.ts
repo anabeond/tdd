@@ -198,11 +198,15 @@ export type ComingSoonData = {
   thumbnail: string
 }
 
-export async function getComingSoonBySlug(slug: string): Promise<ComingSoonData | null> {
+export async function getComingSoonBySlug(
+  slug: string,
+  category: 'programa' | 'sprint'
+): Promise<ComingSoonData | null> {
   const { data } = await supabaseServer
     .from('products')
     .select('slug, title, subtitle, long_description, category, featured_image, thumbnail')
     .eq('slug', slug)
+    .eq('category', category)
     .eq('status', 'coming_soon')
     .single()
   if (!data) return null
