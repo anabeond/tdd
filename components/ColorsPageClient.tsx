@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
 import { IconArrowRight, IconCheck } from '@tabler/icons-react'
 import { COLOR_PALETTE, getColorHex, getColorLabel, type ColorKey } from '@/lib/colors'
@@ -18,10 +18,6 @@ type ColorsResponse = ColorTally & {
 
 const LIVE_REFRESH_MS = 20000
 
-function formatCount(n: number): string {
-  return n.toLocaleString('es-AR')
-}
-
 function formatPercent(value: number): string {
   if (value > 0 && value < 1) return '<1%'
   return `${Math.round(value)}%`
@@ -35,7 +31,6 @@ export default function ColorsPageClient({ initialTally }: { initialTally: Color
   const [errorMsg, setErrorMsg] = useState('')
   const [result, setResult] = useState<ColorsResponse | null>(null)
   const [tally, setTally] = useState<ColorTally>(initialTally)
-  const [showStats, setShowStats] = useState(true)
 
   const fetchTally = useCallback(async () => {
     try {
@@ -95,166 +90,109 @@ export default function ColorsPageClient({ initialTally }: { initialTally: Color
   }
 
   if (status === 'result' && result) {
-    const total = tally.totalSubmissions
     const ranked = [...COLOR_PALETTE].sort((a, b) => percentages[b.key] - percentages[a.key])
 
     return (
       <main className="fixed inset-0 overflow-hidden">
         <PixelCanvas percentages={percentages} />
 
-        <AnimatePresence mode="wait">
-          {showStats ? (
-            <motion.div
-              key="panel"
-              className="absolute inset-0 flex items-center justify-center p-4 overflow-y-auto"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 24 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className="bg-black w-full max-w-[440px] flex flex-col gap-8 p-6 my-auto">
-                {/* Lockup */}
-                <div className="inline-flex items-center gap-4">
-                  <img src="/images/logo-footer.svg" alt="" className="size-12 shrink-0" />
-                  <p
-                    className="font-medium text-white whitespace-nowrap"
-                    style={{ fontSize: 'clamp(32px, 6vw, 48px)', letterSpacing: '-0.02em' }}
-                  >
-                    /colors
-                  </p>
-                </div>
-
-                {/* Your color */}
-                <div className="flex flex-col gap-2">
-                  <p className="font-light text-white/50" style={{ fontSize: 14 }}>
-                    {result.alreadySubmitted ? 'ya habías elegido' : 'tu color'}
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <span
-                      className="size-8 shrink-0"
-                      style={{ backgroundColor: getColorHex(result.yourColor) }}
-                    />
-                    <p
-                      className="font-medium text-white"
-                      style={{ fontSize: 'clamp(20px, 4vw, 28px)', letterSpacing: '-0.02em' }}
-                    >
-                      {getColorLabel(result.yourColor)}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Live breakdown */}
-                <div className="flex flex-col gap-4">
-                  <div className="flex h-3 w-full overflow-hidden">
-                    {ranked.map((c) => (
-                      <div
-                        key={c.key}
-                        className="h-full transition-[width] duration-700 ease-out"
-                        style={{ width: `${percentages[c.key]}%`, backgroundColor: c.hex }}
-                      />
-                    ))}
-                  </div>
-
-                  <ul className="grid grid-cols-2 gap-x-4 gap-y-2">
-                    {ranked.map((c) => (
-                      <li key={c.key} className="flex items-center gap-2 min-w-0">
-                        <span className="size-3 shrink-0" style={{ backgroundColor: c.hex }} />
-                        <span
-                          className={`font-light truncate ${
-                            c.key === result.yourColor ? 'text-white' : 'text-white/50'
-                          }`}
-                          style={{ fontSize: 13 }}
-                        >
-                          {c.label}
-                        </span>
-                        <span className="font-medium text-white ml-auto shrink-0" style={{ fontSize: 13 }}>
-                          {formatPercent(percentages[c.key])}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="flex items-end justify-between gap-4">
-                  <p className="font-light text-white/50" style={{ fontSize: 14 }}>
-                    {total === 1
-                      ? '1 persona pintó el mural'
-                      : `${formatCount(total)} personas pintaron el mural`}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setShowStats(false)}
-                    className="font-medium text-white border-b border-white/40 hover:border-white transition-colors cursor-pointer shrink-0"
-                    style={{ fontSize: 13 }}
-                  >
-                    ver el mural
-                  </button>
-                </div>
+        <motion.div
+          className="absolute inset-0 flex items-center justify-center p-4 overflow-y-auto"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="bg-black w-full max-w-[440px] flex flex-col gap-8 p-6 my-auto">
+            {/* Lockup */}
+            <div className="inline-flex items-center gap-4">
+              <img src="/images/logo-footer.svg" alt="" className="size-12 shrink-0" />
+              <p
+                className="font-medium text-white whitespace-nowrap"
+                style={{ fontSize: 'clamp(32px, 6vw, 48px)', letterSpacing: '-0.02em' }}
+              >
+                /colors
+              </p>
+            </div>
+            {/* Your color */}
+            <div className="flex flex-col gap-2">
+              <p className="font-medium text-white" style={{ fontSize: 14 }}>
+                Tu Color
+              </p>
+              <div className="flex items-center gap-3">
+                <span
+                  className="size-8 shrink-0"
+                  style={{ backgroundColor: getColorHex(result.yourColor) }}
+                />
+                <p
+                  className="font-medium text-white"
+                  style={{ fontSize: 'clamp(20px, 4vw, 28px)', letterSpacing: '-0.02em' }}
+                >
+                  {getColorLabel(result.yourColor)}
+                </p>
               </div>
-            </motion.div>
-          ) : (
-            <motion.button
-              key="reopen"
-              type="button"
-              onClick={() => setShowStats(true)}
-              className="absolute bottom-4 right-4 bg-black text-white font-medium px-4 py-2 cursor-pointer"
-              style={{ fontSize: 13 }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              ver los datos
-            </motion.button>
-          )}
-        </AnimatePresence>
+            </div>
+            {/* Live breakdown */}
+            <div className="flex flex-col gap-4">
+              <div className="flex h-3 w-full overflow-hidden">
+                {ranked.map((c) => (
+                  <div
+                    key={c.key}
+                    className="h-full transition-[width] duration-700 ease-out"
+                    style={{ width: `${percentages[c.key]}%`, backgroundColor: c.hex }}
+                  />
+                ))}
+              </div>
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-2">
+                {ranked.map((c) => (
+                  <li key={c.key} className="flex items-center gap-2 min-w-0">
+                    <span className="size-3 shrink-0" style={{ backgroundColor: c.hex }} />
+                    <span
+                      className={`font-light truncate ${
+                        c.key === result.yourColor ? 'text-white' : 'text-white/50'
+                      }`}
+                      style={{ fontSize: 13 }}
+                    >
+                      {c.label}
+                    </span>
+                    <span className="font-medium text-white ml-auto shrink-0" style={{ fontSize: 13 }}>
+                      {formatPercent(percentages[c.key])}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </motion.div>
       </main>
     )
   }
 
   return (
-    <main className="bg-white min-h-screen px-4 md:px-page py-16 flex items-start justify-start">
-      <motion.div
-        className="max-w-[474px] w-full flex flex-col gap-16 md:gap-32"
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <div className="flex flex-col gap-8">
+    // min-height + flex-1 rather than a percentage height: iOS Safari leaves `h-full`
+    // unresolved here, which collapsed the column and stacked everything at the top.
+    // Growing past the viewport (a phone in landscape) scrolls instead of clipping.
+    <main className="bg-white min-h-[100svh] px-4 md:px-page py-[clamp(16px,4vh,40px)] flex flex-col">
+      <div className="max-w-[474px] w-full flex-1 flex flex-col gap-[clamp(16px,3vh,32px)]">
+        <div className="flex flex-col flex-1 justify-between gap-[clamp(16px,3vh,32px)]">
           {/* Badge */}
           <div className="bg-black inline-flex items-center justify-center px-4 py-1 self-start">
             <p
               className="font-medium text-white whitespace-nowrap"
-              style={{ fontSize: 'clamp(32px, 5vw, 64px)', letterSpacing: '-0.02em' }}
+              style={{ fontSize: 'clamp(28px, min(5vw, 6.5vh), 64px)', letterSpacing: '-0.02em' }}
             >
               /colors
             </p>
           </div>
 
           {/* Invitation — the mural is open to anyone, not only students. */}
-          <div className="flex flex-col gap-2">
-            <p
-              className="font-medium text-black"
-              style={{ fontSize: 'clamp(16px, 2vw, 24px)', lineHeight: 1.25 }}
-            >
-              Un mural colectivo hecho de píxeles. Elegí tu color favorito y sumá el tuyo.
-            </p>
-            {tally.totalSubmissions > 0 && (
-              <motion.p
-                className="font-light text-black/50"
-                style={{ fontSize: 14 }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6 }}
-              >
-                {tally.totalSubmissions === 1
-                  ? '1 persona ya sumó su píxel'
-                  : `${formatCount(tally.totalSubmissions)} personas ya sumaron su píxel`}
-              </motion.p>
-            )}
-          </div>
+          <p
+            className="font-medium text-black"
+            style={{ fontSize: 'clamp(15px, min(2vw, 2.4vh), 24px)', lineHeight: 1.3 }}
+          >
+            Colors es un mural dinámico donde podés sumar tu color favorito y ver el % de personas a las que también les gusta ese color.
+          </p>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-[clamp(16px,3vh,32px)]">
             {/* Name */}
             <div className="flex flex-col gap-2">
               <input
@@ -266,7 +204,7 @@ export default function ColorsPageClient({ initialTally }: { initialTally: Color
                 required
                 disabled={status === 'loading'}
                 className="bg-transparent outline-none font-medium text-black placeholder:text-black w-full disabled:opacity-50"
-                style={{ fontSize: 'clamp(24px, 3.4vw, 32px)', letterSpacing: '-0.02em' }}
+                style={{ fontSize: 'clamp(20px, min(3.4vw, 3.8vh), 32px)', letterSpacing: '-0.02em' }}
               />
               <div className="bg-black h-1 w-full" />
             </div>
@@ -282,7 +220,7 @@ export default function ColorsPageClient({ initialTally }: { initialTally: Color
                 required
                 disabled={status === 'loading'}
                 className="bg-transparent outline-none font-medium text-black placeholder:text-black w-full disabled:opacity-50"
-                style={{ fontSize: 'clamp(24px, 3.4vw, 32px)', letterSpacing: '-0.02em' }}
+                style={{ fontSize: 'clamp(20px, min(3.4vw, 3.8vh), 32px)', letterSpacing: '-0.02em' }}
               />
               <div className="bg-black h-1 w-full" />
             </div>
@@ -291,7 +229,7 @@ export default function ColorsPageClient({ initialTally }: { initialTally: Color
             <div className="flex flex-col gap-2">
               <p
                 className="font-medium text-black"
-                style={{ fontSize: 'clamp(24px, 3.4vw, 32px)', letterSpacing: '-0.02em' }}
+                style={{ fontSize: 'clamp(20px, min(3.4vw, 3.8vh), 32px)', letterSpacing: '-0.02em' }}
               >
                 tu color favorito
               </p>
@@ -335,11 +273,8 @@ export default function ColorsPageClient({ initialTally }: { initialTally: Color
           </form>
 
           {/* Disclaimer */}
-          <p
-            className="font-medium text-black"
-            style={{ fontSize: 'clamp(16px, 2vw, 24px)', lineHeight: 1.25 }}
-          >
-            *un píxel por email. Al sumarte, te agregamos a nuestra lista para contarte novedades del Dojo.
+          <p className="font-medium text-black" style={{ fontSize: 13, lineHeight: 1.4 }}>
+            *Sumá un color por mail. Al hacerlo, te estarás registrando en nuestra lista de mails del Dojo.
           </p>
         </div>
 
@@ -347,10 +282,10 @@ export default function ColorsPageClient({ initialTally }: { initialTally: Color
         <img
           src="/images/logo-footer.svg"
           alt=""
-          className="size-16"
+          className="size-12 md:size-16 shrink-0"
           style={{ filter: 'brightness(0) saturate(100%)' }}
         />
-      </motion.div>
+      </div>
     </main>
   )
 }
