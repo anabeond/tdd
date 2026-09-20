@@ -92,6 +92,7 @@ export default function NavbarClient({ programs, courses }: NavbarClientProps) {
         ...courses.map((c) => ({ label: c.title, href: `/courses/${c.slug}` })),
       ],
     },
+    { label: 'COLORS', href: '/colors', dropdown: false },
   ]
 
   return (
