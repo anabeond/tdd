@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
     const { data: matchedProduct } = product?.ucode
       ? await supabaseServer
           .from('products')
-          .select('id, brevo_list_id')
+          .select('id, brevo_list_id, slug')
           .eq('hotmart_ucode', product.ucode)
           .maybeSingle()
       : { data: null }
@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
     // Welcome email fires once per student, on their first-ever active enrollment —
     // never blocks enrollment, and only flips the flag after a successful send so a
     // transient Brevo failure can retry on a future purchase webhook.
-    if (isEnroll && !student.welcome_email_sent) {
+    if (isEnroll && !student.welcome_email_sent && matchedProduct.slug === 'fundamentals-ux-ui') {
       try {
         await sendWelcomeEmail({ email, name: buyer?.name })
         await supabaseServer.from('students').update({ welcome_email_sent: true }).eq('id', student.id)
