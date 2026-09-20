@@ -104,8 +104,12 @@ export default function ColorsPageClient({ initialTally }: { initialTally: Color
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="bg-black w-full max-w-[440px] flex flex-col gap-8 p-6 my-auto">
-            {/* Lockup */}
-            <div className="inline-flex items-center gap-4">
+            {/* Lockup — also the way out of the mural, which has no navbar either */}
+            <Link
+              href="/"
+              aria-label="Volver al inicio"
+              className="inline-flex items-center gap-4 self-start hover:opacity-70"
+            >
               <img src="/images/logo-footer.svg" alt="" className="size-12 shrink-0" />
               <p
                 className="font-medium text-white whitespace-nowrap"
@@ -113,7 +117,7 @@ export default function ColorsPageClient({ initialTally }: { initialTally: Color
               >
                 /colors
               </p>
-            </div>
+            </Link>
             {/* Your color */}
             <div className="flex flex-col gap-2">
               <p className="font-medium text-white" style={{ fontSize: 14 }}>
