@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     .from('products')
     .select('slug, interest_brevo_list_id')
     .eq('slug', productSlug)
-    .eq('status', 'coming_soon')
+    .in('status', ['coming_soon', 'pre_launch'])
     .maybeSingle()
 
   if (!product) {

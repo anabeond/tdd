@@ -58,17 +58,30 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
       provider: { '@type': 'Organization', name: 'The Design Dojo', sameAs: BASE_URL },
       offers: {
         '@type': 'Offer',
-        ...(program.priceArs
+        // En pre_launch el precio no se muestra en la página todavía, así que tampoco va acá.
+        ...(program.priceArs && program.status !== 'pre_launch'
           ? { price: program.priceArs.replace(/[^0-9]/g, ''), priceCurrency: 'ARS' }
           : {}),
         availability:
-          program.status === 'available' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-        url: program.hotmartCheckoutUrl || `${BASE_URL}/programs/${slug}`,
+          program.status === 'available'
+            ? 'https://schema.org/InStock'
+            : program.status === 'pre_launch'
+            ? 'https://schema.org/PreOrder'
+            : 'https://schema.org/OutOfStock',
+        url:
+          program.status === 'pre_launch'
+            ? `${BASE_URL}/programs/${slug}`
+            : program.hotmartCheckoutUrl || `${BASE_URL}/programs/${slug}`,
       },
       hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'online', courseWorkload: program.duration },
     }
     const faqLd = faqJsonLd(
-      buildProductFaq(program, program.priceArs ? { amount: program.priceArs, currency: 'ARS' } : null)
+      buildProductFaq(
+        program,
+        program.priceArs && program.status !== 'pre_launch'
+          ? { amount: program.priceArs, currency: 'ARS' }
+          : null
+      )
     )
     const breadcrumbLd = breadcrumbJsonLd([
       { name: 'Inicio', url: BASE_URL },

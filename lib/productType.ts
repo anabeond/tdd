@@ -8,6 +8,6 @@ export const PRODUCT_TYPE_LABELS: Record<ProductType, string> = {
 
 export function getCtaLabel(productType: ProductType, status: ProductStatus): string {
   if (status === 'sold_out') return 'Agotado'
-  if (status === 'coming_soon') return 'Próximamente'
+  if (status === 'coming_soon' || status === 'pre_launch') return 'Próximamente'
   return productType === 'mentorship' ? 'Reservar' : 'Inscribirme'
 }

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button'
 import DojoBreak from '@/components/DojoBreak'
 import BreakPicture from '@/components/BreakPicture'
 import AttributesSection from '@/components/AttributesSection'
+import InterestForm from '@/components/InterestForm'
 import { IconArrowRight, IconBrandDiscord } from '@tabler/icons-react'
 import { getCtaLabel } from '@/lib/productType'
 import type { ProductStatus, ProductType } from '@/lib/products'
@@ -38,6 +39,8 @@ export type ProgramTemplateData = {
 	highlightTags?: { icon: string; label: string }[]
 	productType: ProductType
 	status: ProductStatus
+	/** Fecha visible del lanzamiento mientras status === 'pre_launch' */
+	prelaunchLabel: string
 }
 
 type ProgramTemplateProps = {
@@ -46,6 +49,67 @@ type ProgramTemplateProps = {
 
 function PriceDisplay({ priceArs }: { priceArs: string }) {
 	return <span className="text-dojo-white">{priceArs}</span>
+}
+
+function CtaAside({ program }: { program: ProgramTemplateData }) {
+	// Pre-lanzamiento: sin precio ni checkout — fecha + form de interés.
+	if (program.status === 'pre_launch') {
+		return (
+			<div className="w-full md:w-[480px] md:shrink-0 flex flex-col justify-between gap-8 p-8 md:p-16">
+				<div className="flex flex-col gap-2">
+					<p className="font-medium text-accent text-[13px] uppercase tracking-[0.1em]">Lanzamiento Oficial</p>
+					{program.prelaunchLabel && (
+						<div
+							className="font-semibold"
+							style={{ fontSize: 'clamp(22px, 2.2vw, 40px)', letterSpacing: '-0.03em', lineHeight: 1.05 }}
+						>
+							{program.prelaunchLabel}
+						</div>
+					)}
+					<p className="font-light text-dojo-white/50" style={{ fontSize: 15, lineHeight: 1.5 }}>
+						Dejanos tu nombre y tu mail y te avisamos apenas abra la inscripción.
+					</p>
+				</div>
+
+				<InterestForm productSlug={program.slug} />
+			</div>
+		)
+	}
+
+	return (
+		<div className="w-full md:w-[480px] md:shrink-0 flex flex-col justify-between gap-8 p-8 md:p-16">
+			<div className="flex flex-col gap-2">
+				<p className="font-medium text-accent text-[13px] uppercase tracking-[0.1em]">Valor del Programa</p>
+				{program.priceArs && (
+					<div
+						className="font-semibold"
+						style={{ fontSize: 'clamp(22px, 2.2vw, 40px)', letterSpacing: '-0.03em', lineHeight: 1 }}
+					>
+						<PriceDisplay priceArs={program.priceArs} />
+					</div>
+				)}
+			</div>
+
+			<div className="flex flex-col gap-3">
+				{program.status === 'available' ? (
+					<Button
+						href={program.hotmartCheckoutUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						variant="underline"
+						className="self-start text-[22px] text-dojo-white border-accent border-b-2 hover:text-accent"
+					>
+						{getCtaLabel(program.productType, program.status)}
+						<IconArrowRight size="1em" strokeWidth={2} className="inline-block" />
+					</Button>
+				) : (
+					<span className="inline-flex items-center justify-center gap-4 font-medium text-[16px] tracking-[-0.02em] text-dojo-white/30 cursor-not-allowed border border-dojo-white/15 py-3 w-full">
+						{getCtaLabel(program.productType, program.status)}
+					</span>
+				)}
+			</div>
+		</div>
+	)
 }
 
 export default function ProgramTemplate({ program }: ProgramTemplateProps) {
@@ -243,39 +307,8 @@ export default function ProgramTemplate({ program }: ProgramTemplateProps) {
 						</div>
 					</div>
 
-					{/* Right — price + buttons */}
-					<div className="w-full md:w-[480px] md:shrink-0 flex flex-col justify-between gap-8 p-8 md:p-16">
-						<div className="flex flex-col gap-2">
-							<p className="font-medium text-accent text-[13px] uppercase tracking-[0.1em]">Valor del Programa</p>
-							{program.priceArs && (
-								<div
-									className="font-semibold"
-									style={{ fontSize: 'clamp(22px, 2.2vw, 40px)', letterSpacing: '-0.03em', lineHeight: 1 }}
-								>
-									<PriceDisplay priceArs={program.priceArs} />
-								</div>
-							)}
-						</div>
-
-						<div className="flex flex-col gap-3">
-							{program.status === 'available' ? (
-								<Button
-									href={program.hotmartCheckoutUrl}
-									target="_blank"
-									rel="noopener noreferrer"
-									variant="underline"
-									className="self-start text-[22px] text-dojo-white border-accent border-b-2 hover:text-accent"
-								>
-									{getCtaLabel(program.productType, program.status)}
-									<IconArrowRight size="1em" strokeWidth={2} className="inline-block" />
-								</Button>
-							) : (
-								<span className="inline-flex items-center justify-center gap-4 font-medium text-[16px] tracking-[-0.02em] text-dojo-white/30 cursor-not-allowed border border-dojo-white/15 py-3 w-full">
-									{getCtaLabel(program.productType, program.status)}
-								</span>
-							)}
-						</div>
-					</div>
+					{/* Right — price + buttons, o fecha de lanzamiento + form si todavía no abrió */}
+					<CtaAside program={program} />
 				</motion.div>
 			</section>
 
@@ -322,39 +355,8 @@ export default function ProgramTemplate({ program }: ProgramTemplateProps) {
 						</div>
 					</div>
 
-					{/* Right — price + buttons */}
-					<div className="w-full md:w-[480px] md:shrink-0 flex flex-col justify-between gap-8 p-8 md:p-16">
-						<div className="flex flex-col gap-2">
-							<p className="font-medium text-accent text-[13px] uppercase tracking-[0.1em]">Valor del Programa</p>
-							{program.priceArs && (
-								<div
-									className="font-semibold"
-									style={{ fontSize: 'clamp(22px, 2.2vw, 40px)', letterSpacing: '-0.03em', lineHeight: 1 }}
-								>
-									<PriceDisplay priceArs={program.priceArs} />
-								</div>
-							)}
-						</div>
-
-						<div className="flex flex-col gap-3">
-							{program.status === 'available' ? (
-								<Button
-									href={program.hotmartCheckoutUrl}
-									target="_blank"
-									rel="noopener noreferrer"
-									variant="underline"
-									className="self-start text-[22px] text-dojo-white border-accent border-b-2 hover:text-accent"
-								>
-									{getCtaLabel(program.productType, program.status)}
-									<IconArrowRight size="1em" strokeWidth={2} className="inline-block" />
-								</Button>
-							) : (
-								<span className="inline-flex items-center justify-center gap-4 font-medium text-[16px] tracking-[-0.02em] text-dojo-white/30 cursor-not-allowed border border-dojo-white/15 py-3 w-full">
-									{getCtaLabel(program.productType, program.status)}
-								</span>
-							)}
-						</div>
-					</div>
+					{/* Right — price + buttons, o fecha de lanzamiento + form si todavía no abrió */}
+					<CtaAside program={program} />
 				</motion.div>
 			</section>
 		</>

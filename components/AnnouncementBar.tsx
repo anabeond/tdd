@@ -24,7 +24,7 @@ export default function AnnouncementBar() {
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
     >
       <p className="font-semibold text-black text-[14px] text-center leading-snug">
-        Feliz Primavera 2026 🌻🌞 Usa 'OPEN-DOJO' para 50% Off en Fundamentos de UX/UI
+        Feliz Primavera 🌻🌞
       </p>
     </motion.a>
   )

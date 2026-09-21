@@ -3,7 +3,8 @@ import type { ProgramTemplateData } from '@/components/Program-Template'
 import type { CourseTemplateData } from '@/components/Course-Template'
 
 export type ProductType = 'online_course' | 'ebook' | 'mentorship'
-export type ProductStatus = 'available' | 'coming_soon' | 'sold_out'
+// 'pre_launch': la página queda viva pero sin precio ni checkout — muestra fecha de lanzamiento + form de interés.
+export type ProductStatus = 'available' | 'coming_soon' | 'sold_out' | 'pre_launch'
 export type ProductSeason = 'fall' | 'winter' | 'spring' | 'summer'
 
 type ProductRow = {
@@ -33,6 +34,7 @@ type ProductRow = {
   product_type: ProductType
   season: ProductSeason | null
   status: ProductStatus
+  prelaunch_label: string | null
 }
 
 function toProgram(row: ProductRow): ProgramTemplateData {
@@ -59,6 +61,7 @@ function toProgram(row: ProductRow): ProgramTemplateData {
     highlightTags: row.highlight_tags ?? [],
     productType: row.product_type,
     status: row.status,
+    prelaunchLabel: row.prelaunch_label ?? '',
   }
 }
 
