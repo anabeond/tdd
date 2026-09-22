@@ -8,6 +8,9 @@ export default async function Highlight() {
   const program = await getFeaturedProduct()
   if (!program) return null
 
+  const heroImage = program.heroImage || '/images/highlight-person.png'
+  const heroImageMobile = program.heroImageMobile || heroImage
+
   return (
     <section className="relative w-full overflow-hidden bg-dark-blue aspect-[1320/1832] md:aspect-auto md:min-h-[791px]">
       {/* Background image — right side, fading left */}
@@ -15,13 +18,32 @@ export default async function Highlight() {
         <div className="absolute inset-0 z-10 bg-dark-blue/80 mix-blend-overlay" />
         {/* Featured product image — full bleed */}
         <div className="absolute inset-0 z-10">
-          <Image
-            src={program.heroImage || '/images/highlight-person.png'}
-            alt={program.title}
-            fill
-            className="object-contain object-right"
-            priority
-          />
+          {heroImageMobile !== heroImage ? (
+            <>
+              <Image
+                src={heroImageMobile}
+                alt={program.title}
+                fill
+                className="md:hidden object-cover object-center"
+                priority
+              />
+              <Image
+                src={heroImage}
+                alt={program.title}
+                fill
+                className="hidden md:block object-contain object-right"
+                priority
+              />
+            </>
+          ) : (
+            <Image
+              src={heroImage}
+              alt={program.title}
+              fill
+              className="object-contain object-right"
+              priority
+            />
+          )}
         </div>
       </div>
 
